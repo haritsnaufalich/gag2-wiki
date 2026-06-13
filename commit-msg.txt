@@ -1,30 +1,20 @@
-Hash router -> browser router (SPA-on-GitHub-Pages pattern)
+Hash-router -> browser-router migration shim in index.html + 404.html
 
-App.tsx: createHashRouter -> createBrowserRouter. URL paths go
-from /#/crops to /crops (and /crops/bamboo for the detail page).
-Real deep-links now resolve via the 404 fallback.
+External links and bookmarks that point at the old hash format
+(/#/crops, /#/crops/bamboo, /#/calculator?weight=1, ...) silently
+landed on the home page after the browser-router switch, because
+createBrowserRouter reads window.location.pathname (which never
+includes the hash) and not the hash.
 
-Vite config (vite.config.ts):
-- Added 404.html as a second build input so Vite processes it
-  alongside index.html. Both reference the same hashed JS/CSS
-  bundle (now named main-*.js instead of index-*.js because
-  Vite uses the entry name as the chunk prefix).
+Add a 14-line IIFE to both index.html and 404.html that runs
+before the React bundle. It detects the old '#/' prefix and
+rewrites the URL via history.replaceState (so the back button
+stays clean). Search params are preserved.
 
-404.html (new, root): mirrors index.html as the SPA shell.
-GitHub Pages serves this for any unknown route, the SPA loads,
-createBrowserRouter reads the original path from window.location,
-and renders the right page. Old bookmarked /#/crops URLs will
-return the home page (the hash is dropped) — a one-time breaking
-change for any external links.
+- Strict prefix check: only matches '#/' (not '#section' anchors)
+- IIFE — no global pollution
+- replaceState — no extra history entry
+- runs synchronously, before the module script tag
 
-public/.nojekyll (new, empty file): disables Jekyll processing
-on GitHub Pages so leading-underscore dirs (none today, but safe
-to ship) and other Jekyll defaults don't mangle the build.
-
-Footer.tsx: <a href="#/..."> -> <Link to="/..."> so navigation
-stays internal (pushState) and doesn't trigger a 404 round-trip.
-
-Sweep: no remaining href="#/..." patterns in src/.
-
-Bundle impact: same as before (one extra ~1.7 kB 404.html
-output). Code splitting from the previous commit unaffected.
+This can be removed in a few months once external references
+have migrated. Comments at the top of each block explain why.

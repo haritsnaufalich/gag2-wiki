@@ -28,6 +28,20 @@
   </head>
   <body class="antialiased">
     <div id="root"></div>
+    <!-- One-time hash-router -> browser-router migration. See index.html. -->
+    <script>
+      (function () {
+        var h = window.location.hash;
+        if (h && h.charAt(0) === "#" && h.charAt(1) === "/") {
+          var newPath = h.slice(1) + window.location.search;
+          window.history.replaceState(
+            null,
+            "",
+            window.location.pathname + newPath
+          );
+        }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

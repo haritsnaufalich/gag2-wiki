@@ -57,6 +57,24 @@
   </head>
   <body class="antialiased">
     <div id="root"></div>
+    <!--
+      One-time migration from hash router (#/crops) to browser router
+      (/crops). Runs before the React bundle so createBrowserRouter sees
+      the corrected path on init. Safe to remove after a few months.
+    -->
+    <script>
+      (function () {
+        var h = window.location.hash;
+        if (h && h.charAt(0) === "#" && h.charAt(1) === "/") {
+          var newPath = h.slice(1) + window.location.search;
+          window.history.replaceState(
+            null,
+            "",
+            window.location.pathname + newPath
+          );
+        }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
