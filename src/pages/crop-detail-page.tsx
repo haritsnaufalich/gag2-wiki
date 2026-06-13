@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { TierBadge } from "@/components/crops/tier-badge";
 import { ValueCurveChart } from "@/components/crops/value-curve-chart";
+import { JsonLd, SITE_NAME, SITE_URL, PUBLISHER, OG_IMAGE } from "@/components/seo/json-ld";
 import { TIER_MAP, getCropBySlug, MUTATIONS, CROPS } from "@/data";
 import { obtainmentLabel } from "@/data/crops";
 import { formatNumber, formatGrowTime } from "@/lib/utils";
@@ -38,6 +39,33 @@ export function CropDetailPage() {
       : 0;
 
   return (
+    <>
+      <JsonLd
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: `${crop.name} - ${SITE_NAME}`,
+          description: crop.blurb,
+          url: `${SITE_URL}/crops/${crop.slug}`,
+          image: OG_IMAGE,
+          inLanguage: "en",
+          author: PUBLISHER,
+          publisher: {
+            "@type": "Organization",
+            name: SITE_NAME,
+            url: SITE_URL,
+          },
+          isPartOf: {
+            "@type": "WebSite",
+            name: SITE_NAME,
+            url: SITE_URL,
+          },
+          about: {
+            "@type": "Thing",
+            name: `${crop.name} (Grow A Garden 2 ${tier.label} crop)`,
+          },
+        }}
+      />
     <div className="container py-10">
       <Link
         to="/crops"
@@ -223,6 +251,7 @@ export function CropDetailPage() {
         </aside>
       </div>
     </div>
+    </>
   );
 }
 

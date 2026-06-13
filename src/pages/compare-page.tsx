@@ -6,6 +6,7 @@ import { TIER_MAP } from "@/data/tiers";
 import { TierBadge } from "@/components/crops/tier-badge";
 import { cn, formatNumber, formatGrowTime } from "@/lib/utils";
 import { trackOnce } from "@/lib/use-plausible";
+import { JsonLd, SITE_NAME, SITE_URL, PUBLISHER, OG_IMAGE } from "@/components/seo/json-ld";
 
 const [aDefault, bDefault] = [CROPS[0], CROPS[15]];
 
@@ -26,6 +27,20 @@ export function ComparePage() {
   }, [a.slug, b.slug]);
 
   return (
+    <>
+      <JsonLd
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: `Compare Crops - ${SITE_NAME}`,
+          description: "Side-by-side comparison of any two GAG2 crops: base value, grow time, mutations-stacked ceiling, and Sheckles per hour.",
+          url: `${SITE_URL}/compare`,
+          image: OG_IMAGE,
+          inLanguage: "en",
+          author: PUBLISHER,
+          isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
+        }}
+      />
     <div className="container py-10 max-w-5xl">
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight flex items-center gap-3">
@@ -108,6 +123,7 @@ export function ComparePage() {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 }
 

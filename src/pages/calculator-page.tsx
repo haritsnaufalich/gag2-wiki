@@ -9,6 +9,7 @@ import { Sparkles, Calculator as CalcIcon, X, Timer, TrendingUp, User } from "lu
 import { TIER_MAP } from "@/data/tiers";
 import { TierBadge } from "@/components/crops/tier-badge";
 import { trackOnce } from "@/lib/use-plausible";
+import { JsonLd, SITE_NAME, SITE_URL, PUBLISHER, OG_IMAGE } from "@/components/seo/json-ld";
 
 export function CalculatorPage() {
   const [cropSlug, setCropSlug] = useState(CROPS[12].slug);
@@ -91,6 +92,20 @@ export function CalculatorPage() {
   };
 
   return (
+    <>
+      <JsonLd
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: `Value Calculator - ${SITE_NAME}`,
+          description: "Stack mutations, set weight, apply friend boost, and see the total Sheckle value for any GAG2 crop.",
+          url: `${SITE_URL}/calculator`,
+          image: OG_IMAGE,
+          inLanguage: "en",
+          author: PUBLISHER,
+          isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
+        }}
+      />
     <div className="container py-10 max-w-5xl">
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight flex items-center gap-3">
@@ -374,6 +389,7 @@ export function CalculatorPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

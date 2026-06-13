@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Sprout, Sparkles, Calculator, Layers, Settings2, GitCompare, Gift, Wrench, Egg, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { JsonLd, SITE_URL, SITE_NAME, PUBLISHER, OG_IMAGE } from "@/components/seo/json-ld";
 import { CROPS, TIERS, WIKI_STATS } from "@/data";
 import { formatNumber } from "@/lib/utils";
 
@@ -22,6 +23,24 @@ export function HomePage() {
   const packSeeds = CROPS.filter((c) => c.tier === "unknown").slice(0, 5);
 
   return (
+    <>
+      <JsonLd
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: `${SITE_NAME} - Home`,
+          description: `${WIKI_STATS.totalCrops} crops across ${WIKI_STATS.totalTiers} tiers, ${WIKI_STATS.totalMutations} mutations, ${WIKI_STATS.totalGears} gears, ${WIKI_STATS.totalEggs} egg types, ${WIKI_STATS.totalSeedPacks} seed packs.`,
+          url: SITE_URL + "/",
+          image: OG_IMAGE,
+          inLanguage: "en",
+          isPartOf: {
+            "@type": "WebSite",
+            name: SITE_NAME,
+            url: SITE_URL,
+          },
+          publisher: PUBLISHER,
+        }}
+      />
     <div className="bg-emerald-ambient">
       {/* Hero */}
       <section className="container pt-16 pb-12 md:pt-24 md:pb-20">
@@ -233,6 +252,7 @@ export function HomePage() {
         </Card>
       </section>
     </div>
+    </>
   );
 }
 

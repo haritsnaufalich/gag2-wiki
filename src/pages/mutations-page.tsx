@@ -2,6 +2,7 @@ import { Sparkles, Star } from "lucide-react";
 import { MUTATIONS, type MutationKind } from "@/data/mutations";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { JsonLd, SITE_NAME, SITE_URL, PUBLISHER, OG_IMAGE } from "@/components/seo/json-ld";
 
 const KIND_META: Record<MutationKind, { label: string; tint: string; icon: typeof Star }> = {
   variant:  { label: "Variant",  tint: "text-amber-400",   icon: Star },
@@ -25,6 +26,21 @@ export function MutationsPage() {
   const allMultipliers = variantMult * (1 + weatherMult);
 
   return (
+    <>
+      <JsonLd
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: `Mutations - ${SITE_NAME}`,
+          description: `Variants and weather mutations in Grow A Garden 2. Combined formula: variant × (1 + Σ weather). ${MUTATIONS.length} mutations including ${variants.length} variants and ${mutations.length} weather/event mutations.`,
+          url: `${SITE_URL}/mutations`,
+          image: OG_IMAGE,
+          inLanguage: "en",
+          author: PUBLISHER,
+          publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+          isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
+        }}
+      />
     <div className="container py-10">
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight flex items-center gap-3">
@@ -84,6 +100,7 @@ export function MutationsPage() {
         kind="mutation"
       />
     </div>
+    </>
   );
 }
 

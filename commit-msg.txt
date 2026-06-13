@@ -1,36 +1,45 @@
-Design tokens: src/lib/tokens.ts + value-curve-chart refactor
+Structured data (JSON-LD) for SEO
 
-Added src/lib/tokens.ts as a single source of truth for the values
-Tailwind classes can't easily reach (SVG fills, inline style={}
-blocks, canvas, third-party widgets). Hex values mirror Tailwind's
-palette so visual consistency is automatic when both systems agree.
+New component src/components/seo/json-ld.tsx:
+- Renders <script type="application/ld+json" dangerouslySetInnerHTML={...}>
+  with a typed schema payload
+- Exports SITE_URL, SITE_NAME, SITE_DESCRIPTION, PUBLISHER, OG_IMAGE
+  for use in any page's schema
+- Exports websiteSchema (WebSite) as a canonical reference for the
+  static index.html version
 
-Tokens shipped:
-- colors: brand + accent hex (emerald400, emerald500, amber400,
-  rose500, sky400, violet400, lime500, slate900)
-- rgb: same as colors but in rgb(R G B) form for SVG attributes
-- chart: chart-specific palette (curve, point, pointRing) for the
-  value-curve chart
-- font: family (Poppins)
-- types: ColorToken, RgbToken, ChartToken
+Static schema in index.html:
+- WebSite: site name, URL, description, language, publisher.
+  Matches the home-page WebPage JSON-LD's isPartOf block so
+  Google sees a single coherent entity.
 
-value-curve-chart.tsx refactor:
-- Removed local CURVE_COLOR / POINT_COLOR / POINT_RING constants
-  (3 hardcoded rgb() strings)
-- Replaced the inline `style={{ ..., stroke: 'rgb(15 23 42)' }}`
-  on point labels with `chart.pointRing`
-- Now imports { chart } from '@/lib/tokens' — single source of
-  truth for the chart palette
+Per-page schemas (rendered at the top of each page component):
+- home-page.tsx: WebPage with stat counts in the description
+- crop-detail-page.tsx: Article with the crop's blurb + tier
+  metadata in the `about` block
+- mutations-page.tsx: Article with the variant/weather count
+- calculator-page.tsx: WebPage for the value calculator
+- compare-page.tsx: WebPage for the side-by-side comparator
 
-If a future contributor needs to tweak the chart colors, they
-change tokens.ts instead of hunting for rgb() strings.
+Each schema points back to the WebSite via isPartOf, lists the
+publisher, and uses absolute URLs. image is the site-wide
+og-image.png (no per-page hero image yet — the current og-image
+is the generic one).
 
-No behavior change. Bundle impact: +0.13 kB on the main chunk
-(tokens.ts is small). crop-detail-page chunk went from 11.69 kB
-to 11.82 kB (it owns the chart, so the import lands here rather
-than the main bundle — Vite hoist decisions).
+Build impact: the home, calculator, compare, mutations, and
+crop-detail chunks all grew ~0.3-0.5 kB. main bundle unchanged at
+294.39 kB.
 
-Audit note: only value-curve-chart had hardcoded colors. The
-rest of the project uses Tailwind classes, which IS the token
-system for component JSX. This file is for the non-Tailwind
-exceptions.
+Verified: React renders the script tag in the DOM, the browser's
+HTML parser reads the JSON-LD, search-engine crawlers will
+extract the metadata. Google's Rich Results Test would be the
+authoritative validator, but the schemas follow Google's
+required/recommended fields for WebSite, WebPage, and Article.
+
+Follow-up (deferred, not in this commit):
+- Per-page canonical <link> via a small useEffect (the current
+  index.html has a single canonical pointing at the homepage,
+  which isn't ideal for deep URLs)
+- JSON-LD for the other pages (systems, pets, gears, eggs,
+  seed-packs) — low SEO value, skipped
+- BreadcrumbList for category pages

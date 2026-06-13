@@ -54,6 +54,25 @@
     <!-- Plausible analytics (privacy-friendly, no cookies, GDPR-compliant).
          Self-host: replace src with /js/script.js and the dashboard's URL. -->
     <script defer data-domain="haritsnaufalich.github.io" src="https://plausible.io/js/script.js"></script>
+
+    <!-- Structured data: site-wide WebSite schema.
+         Per-page schemas (Article, WebPage) are rendered by the page
+         components via <JsonLd /> from src/components/seo/json-ld.tsx. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Grow A Garden 2 Wiki",
+        "url": "https://haritsnaufalich.github.io/gag2-wiki",
+        "description": "Community-driven crop database, mutations, calculators, and tools for Grow A Garden 2 on Roblox.",
+        "inLanguage": "en",
+        "publisher": {
+          "@type": "Person",
+          "name": "haritsnaufalich",
+          "url": "https://github.com/haritsnaufalich"
+        }
+      }
+    </script>
   </head>
   <body class="antialiased">
     <div id="root"></div>
