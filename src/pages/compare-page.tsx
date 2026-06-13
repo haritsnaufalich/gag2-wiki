@@ -202,7 +202,10 @@ function StatBlock({
 }
 
 function MutationCeiling({ crop, accent }: { crop: typeof aDefault; accent: string }) {
-  const totalMultiplier = MUTATIONS.reduce((acc, m) => acc * m.multiplier, 1);
+  const totalMultiplier = MUTATIONS.reduce(
+    (acc, m) => acc * (m.multiplier ?? 1),
+    1
+  );
   const ceiling = crop.baseValue * totalMultiplier;
   return (
     <div className="rounded-lg border border-border/60 bg-background/40 p-4">

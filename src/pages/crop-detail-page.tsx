@@ -264,7 +264,7 @@ function MutationChip({
       </div>
     );
   }
-  const effective = baseValue * mutation.multiplier;
+  const effective = baseValue * (mutation.multiplier ?? 1);
   return (
     <div className="rounded-md border border-border/60 bg-background/40 p-2.5 text-center hover:border-emerald-400/40 transition-colors">
       <div className="text-xs font-medium">

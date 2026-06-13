@@ -21,7 +21,10 @@ export function CalculatorPage() {
 
   const { effective, multiplier, activatedMutations } = useMemo(() => {
     const activated = MUTATIONS.filter((m) => active.has(m.slug));
-    const mult = activated.reduce((acc, m) => acc * m.multiplier, 1);
+    const mult = activated.reduce(
+      (acc, m) => acc * (m.multiplier ?? 1),
+      1
+    );
     const boostMult = 1 + friendBoostPct / 100;
     // Per-weight value: average value per gram, then scaled by chosen weight.
     const baseValueAtWeight =

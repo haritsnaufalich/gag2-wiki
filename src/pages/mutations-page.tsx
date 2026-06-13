@@ -11,7 +11,9 @@ const KIND_META: Record<MutationKind, { label: string; tint: string; icon: typeo
 export function MutationsPage() {
   const variants = MUTATIONS.filter((m) => m.kind === "variant");
   const mutations = MUTATIONS.filter((m) => m.kind === "mutation");
-  const allMultipliers = MUTATIONS.map((m) => m.multiplier);
+  const allMultipliers = MUTATIONS.map((m) => m.multiplier).filter(
+    (v): v is number => typeof v === "number"
+  );
 
   return (
     <div className="container py-10">
@@ -39,7 +41,9 @@ export function MutationsPage() {
               >
                 <span>{m.emoji}</span>
                 <span className="font-medium">{m.name}</span>
-                <span className="text-muted-foreground">×{m.multiplier}</span>
+                <span className="text-muted-foreground">
+                  {m.multiplier != null ? `×${m.multiplier}` : "TBA"}
+                </span>
               </span>
             ))}
           </div>

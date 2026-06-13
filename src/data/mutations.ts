@@ -5,7 +5,7 @@ export interface Mutation {
   name: string;
   emoji: string;
   kind: MutationKind;
-  multiplier: number;
+  multiplier: number | null;
   /** Source tag, e.g. weather, event, item. */
   source: string;
   /** Short blurb (own wording). */
@@ -19,7 +19,7 @@ export const MUTATIONS: Mutation[] = [
     emoji: "🥇",
     kind: "variant",
     multiplier: 15,
-    source: "Midas Event",
+    source: "Gold mutated plants, Gold Seed event, random chance",
     blurb: "Solid gold variant. Big single-mutation multiplier.",
   },
   {
@@ -28,7 +28,7 @@ export const MUTATIONS: Mutation[] = [
     emoji: "🌈",
     kind: "variant",
     multiplier: 40,
-    source: "Random Chance",
+    source: "Rainbow mutated plants, Rainbow event, Unicorn pet, random chance",
     blurb: "Full-spectrum variant. Top-tier single-mutation boost.",
   },
   {
@@ -37,7 +37,7 @@ export const MUTATIONS: Mutation[] = [
     emoji: "❄️",
     kind: "mutation",
     multiplier: 5,
-    source: "Snowfall weather",
+    source: "Snowfall/Blizzard weather (2m30s duration)",
     blurb: "Cryo-stasis mutation. Multiplies cleanly with variants.",
   },
   {
@@ -46,8 +46,26 @@ export const MUTATIONS: Mutation[] = [
     emoji: "⚡",
     kind: "mutation",
     multiplier: 80,
-    source: "Lightning/Shocked weather",
+    source: "Lightning weather (5 min duration)",
     blurb: "High-voltage mutation. The biggest single mutation multiplier.",
+  },
+  {
+    slug: "starstruck",
+    name: "Starstruck",
+    emoji: "🌠",
+    kind: "mutation",
+    multiplier: null,
+    source: "Starfall weather (2 min duration)",
+    blurb: "Cosmic mutation from shooting stars. Multiplier TBD on the canonical wiki.",
+  },
+  {
+    slug: "bloodlit",
+    name: "Bloodlit",
+    emoji: "🩸",
+    kind: "mutation",
+    multiplier: null,
+    source: "TBA",
+    blurb: "Mysterious mutation. Source and multiplier are TBD on the canonical wiki.",
   },
 ];
 
