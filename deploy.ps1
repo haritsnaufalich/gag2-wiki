@@ -10,7 +10,7 @@
 $REPO  = "gag2-wiki"
 $VIS   = "public"            # public | private
 $DIR   = "D:\Liebe\Coding\GAG2"
-$USER  = "HaritsNaufal"      # git user.name (no spaces; not the GitHub handle)
+$USER  = "haritsnaufalich"   # GitHub username (lowercase) — `gh auth status` shows this
 $EMAIL = "haritsnaufalichs11@gmail.com"
 
 Set-Location $DIR
