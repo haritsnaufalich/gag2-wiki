@@ -28,6 +28,12 @@ export interface Crop {
   valueFloor: number | null;
   /** Canonical Average Value (Sheckles). null when the source marks TBD. */
   valueAvg: number | null;
+  /**
+   * Per-gram Sheckle value, used by the calculator when a single in-game
+   * observation has been verified. null unless explicitly calibrated.
+   * Overrides the `valueAvg / weightAvgG` ratio and `baseValue` fallback.
+   */
+  valuePerGram: number | null;
   /** Canonical Price-Floor Weight (grams). null when the source marks TBD. */
   weightFloorG: number | null;
   /** Canonical Average Weight (grams). null when the source marks TBD. */
@@ -62,8 +68,7 @@ export interface Crop {
 
 export const CROPS: Crop[] = [
   // ── Common ─────────────────────────────────────────────
-  {
-    slug: "carrot",
+  {slug: "carrot",
     name: "Carrot",
     emoji: "🥕",
     tier: "common",
@@ -75,6 +80,7 @@ export const CROPS: Crop[] = [
     baseValue: 1,
     valueFloor: 1,
     valueAvg: 1,
+    valuePerGram: null,
     weightFloorG: 0.95,
     weightAvgG: 1.0,
     weightMinG: 0.70,
@@ -84,8 +90,7 @@ export const CROPS: Crop[] = [
     blurb: "Reliable root vegetable — the textbook beginner crop.",
     tags: ["root", "beginner"],
   },
-  {
-    slug: "strawberry",
+  {slug: "strawberry",
     name: "Strawberry",
     emoji: "🍓",
     tier: "common",
@@ -96,6 +101,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -107,8 +113,7 @@ export const CROPS: Crop[] = [
     blurb: "First multi-harvest fruit. A staple for any starter plot.",
     tags: ["multi-harvest", "fruit"],
   },
-  {
-    slug: "blueberry",
+  {slug: "blueberry",
     name: "Blueberry",
     emoji: "🫐",
     tier: "common",
@@ -119,6 +124,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -132,8 +138,7 @@ export const CROPS: Crop[] = [
   },
 
   // ── Uncommon ───────────────────────────────────────────
-  {
-    slug: "tulip",
+  {slug: "tulip",
     name: "Tulip",
     emoji: "🌷",
     tier: "uncommon",
@@ -144,6 +149,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
         valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -155,8 +161,7 @@ export const CROPS: Crop[] = [
     blurb: "A decorative bulb that fetches a tidy premium.",
     tags: ["flower", "decor"],
   },
-  {
-    slug: "tomato",
+  {slug: "tomato",
     name: "Tomato",
     emoji: "🍅",
     tier: "uncommon",
@@ -167,6 +172,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
         valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -178,8 +184,7 @@ export const CROPS: Crop[] = [
     blurb: "Multi-harvest vine — high return over a single planting.",
     tags: ["multi-harvest", "vine"],
   },
-  {
-    slug: "apple",
+  {slug: "apple",
     name: "Apple",
     emoji: "🍎",
     tier: "uncommon",
@@ -190,6 +195,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -203,8 +209,7 @@ export const CROPS: Crop[] = [
   },
 
   // ── Rare ───────────────────────────────────────────────
-  {
-    slug: "bamboo",
+  {slug: "bamboo",
     name: "Bamboo",
     emoji: "🎋",
     tier: "rare",
@@ -215,6 +220,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: 0.1573, // user-verified: 4.89kg + 10% friends = 846¢
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -226,8 +232,7 @@ export const CROPS: Crop[] = [
     blurb: "Rapid vertical growth. A favorite for tight plot layouts.",
     tags: ["fast-grow", "structural"],
   },
-  {
-    slug: "corn",
+  {slug: "corn",
     name: "Corn",
     emoji: "🌽",
     tier: "rare",
@@ -238,6 +243,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -249,8 +255,7 @@ export const CROPS: Crop[] = [
     blurb: "Stalks that keep producing — built for long sessions.",
     tags: ["multi-harvest", "staple"],
   },
-  {
-    slug: "cactus",
+  {slug: "cactus",
     name: "Cactus",
     emoji: "🌵",
     tier: "rare",
@@ -261,6 +266,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -272,8 +278,7 @@ export const CROPS: Crop[] = [
     blurb: "Hardy desert plant. Single harvest, generous payout.",
     tags: ["desert", "single"],
   },
-  {
-    slug: "pineapple",
+  {slug: "pineapple",
     name: "Pineapple",
     emoji: "🍍",
     tier: "rare",
@@ -284,6 +289,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -297,8 +303,7 @@ export const CROPS: Crop[] = [
   },
 
   // ── Epic ───────────────────────────────────────────────
-  {
-    slug: "mushroom",
+  {slug: "mushroom",
     name: "Mushroom",
     emoji: "🍄",
     tier: "epic",
@@ -309,6 +314,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -320,8 +326,7 @@ export const CROPS: Crop[] = [
     blurb: "Shaded grower. Multi-harvest fungus that loves damp plots.",
     tags: ["shade", "fungus"],
   },
-  {
-    slug: "green-bean",
+  {slug: "green-bean",
     name: "Green Bean",
     emoji: "🫛",
     tier: "epic",
@@ -332,6 +337,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -344,8 +350,7 @@ export const CROPS: Crop[] = [
     blurb: "Climbing vine from the TEAMGREENBEAN code — 3 free seeds.",
     tags: ["vine", "multi-harvest", "code-reward"],
   },
-  {
-    slug: "banana",
+  {slug: "banana",
     name: "Banana",
     emoji: "🍌",
     tier: "epic",
@@ -356,6 +361,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -367,8 +373,7 @@ export const CROPS: Crop[] = [
     blurb: "Bunching fruit tree. A workhorse for serious farmers.",
     tags: ["tree", "bunch"],
   },
-  {
-    slug: "grape",
+  {slug: "grape",
     name: "Grape",
     emoji: "🍇",
     tier: "epic",
@@ -379,6 +384,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -390,8 +396,7 @@ export const CROPS: Crop[] = [
     blurb: "Vine fruit. Reliable multi-harvest with premium pricing.",
     tags: ["vine", "premium"],
   },
-  {
-    slug: "coconut",
+  {slug: "coconut",
     name: "Coconut",
     emoji: "🥥",
     tier: "epic",
@@ -402,6 +407,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -413,8 +419,7 @@ export const CROPS: Crop[] = [
     blurb: "Tropical palm. Long grow, exceptional reward per cycle.",
     tags: ["tropical", "palm"],
   },
-  {
-    slug: "mango",
+  {slug: "mango",
     name: "Mango",
     emoji: "🥭",
     tier: "epic",
@@ -425,6 +430,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -438,8 +444,7 @@ export const CROPS: Crop[] = [
   },
 
   // ── Legendary ──────────────────────────────────────────
-  {
-    slug: "dragon-fruit",
+  {slug: "dragon-fruit",
     name: "Dragon Fruit",
     emoji: "🐉",
     tier: "legendary",
@@ -450,6 +455,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
         valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -461,8 +467,7 @@ export const CROPS: Crop[] = [
     blurb: "Exotic cactus fruit. The first real taste of legendary loot.",
     tags: ["exotic", "cactus"],
   },
-  {
-    slug: "acorn",
+  {slug: "acorn",
     name: "Acorn",
     emoji: "🌰",
     tier: "legendary",
@@ -473,6 +478,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -484,8 +490,7 @@ export const CROPS: Crop[] = [
     blurb: "Sapling-to-tree. Single harvest with one of the best payouts.",
     tags: ["tree", "single"],
   },
-  {
-    slug: "cherry",
+  {slug: "cherry",
     name: "Cherry",
     emoji: "🍒",
     tier: "legendary",
@@ -496,6 +501,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -507,8 +513,7 @@ export const CROPS: Crop[] = [
     blurb: "Twin-fruit cherry tree. The aesthetic legend.",
     tags: ["twin", "tree"],
   },
-  {
-    slug: "sunflower",
+  {slug: "sunflower",
     name: "Sunflower",
     emoji: "🌻",
     tier: "legendary",
@@ -519,6 +524,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -532,8 +538,7 @@ export const CROPS: Crop[] = [
   },
 
   // ── Mythic ─────────────────────────────────────────────
-  {
-    slug: "venus-fly-trap",
+  {slug: "venus-fly-trap",
     name: "Venus Fly Trap",
     emoji: "🪴",
     tier: "mythic",
@@ -544,6 +549,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
         valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -555,8 +561,7 @@ export const CROPS: Crop[] = [
     blurb: "Carnivorous plant. Event-bound and worth every Sheckle.",
     tags: ["event", "carnivore"],
   },
-  {
-    slug: "pomegranate",
+  {slug: "pomegranate",
     name: "Pomegranate",
     emoji: "🍎",
     tier: "mythic",
@@ -567,6 +572,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -578,8 +584,7 @@ export const CROPS: Crop[] = [
     blurb: "Antique fruit tree. Mythic rarity, mythic reward.",
     tags: ["tree", "ancient"],
   },
-  {
-    slug: "poison-apple",
+  {slug: "poison-apple",
     name: "Poison Apple",
     emoji: "☠️",
     tier: "mythic",
@@ -590,6 +595,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -603,8 +609,7 @@ export const CROPS: Crop[] = [
   },
 
   // ── Super ──────────────────────────────────────────────
-  {
-    slug: "moon-bloom",
+  {slug: "moon-bloom",
     name: "Moon Bloom",
     emoji: "🌸",
     tier: "super",
@@ -615,6 +620,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
         valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -626,8 +632,7 @@ export const CROPS: Crop[] = [
     blurb: "Night-blooming super-flower. Endgame floral flex.",
     tags: ["night", "endgame"],
   },
-  {
-    slug: "dragons-breath",
+  {slug: "dragons-breath",
     name: "Dragon's Breath",
     emoji: "🔥",
     tier: "super",
@@ -638,6 +643,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
         valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -651,8 +657,7 @@ export const CROPS: Crop[] = [
   },
 
   // ── Unknown seeds (the wiki) ─────────────────────
-  {
-    slug: "baby-cactus",
+  {slug: "baby-cactus",
     name: "Baby Cactus",
     emoji: "🌵",
     tier: "unknown",
@@ -663,6 +668,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -674,8 +680,7 @@ export const CROPS: Crop[] = [
     blurb: "Tiny desert starter. Pulled from the the wiki.",
     tags: ["pack-exclusive", "starter"],
   },
-  {
-    slug: "horned-melon",
+  {slug: "horned-melon",
     name: "Horned Melon",
     emoji: "🍈",
     tier: "unknown",
@@ -686,6 +691,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -697,8 +703,7 @@ export const CROPS: Crop[] = [
     blurb: "Spiky exotic fruit — a Pack-exclusive oddity.",
     tags: ["exotic", "pack-exclusive"],
   },
-  {
-    slug: "glow-mushroom",
+  {slug: "glow-mushroom",
     name: "Glow Mushroom",
     emoji: "🍄",
     tier: "unknown",
@@ -709,6 +714,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -720,8 +726,7 @@ export const CROPS: Crop[] = [
     blurb: "Bioluminescent fungus. Luminous, Pack-only, and collectible.",
     tags: ["luminous", "pack-exclusive"],
   },
-  {
-    slug: "poison-ivy",
+  {slug: "poison-ivy",
     name: "Poison Ivy",
     emoji: "🌿",
     tier: "unknown",
@@ -732,6 +737,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
         valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -743,8 +749,7 @@ export const CROPS: Crop[] = [
     blurb: "Vining toxic plant. Pack-exclusive and a top-tier event piece.",
     tags: ["toxic", "pack-exclusive"],
   },
-  {
-    slug: "ghost-pepper",
+  {slug: "ghost-pepper",
     name: "Ghost Pepper",
     emoji: "👻",
     tier: "unknown",
@@ -755,6 +760,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
+    valuePerGram: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
