@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
-import { PawPrint, Coins, MapPin, Tag, Sparkles, Crown } from "lucide-react";
+import { PawPrint, Coins, MapPin, Tag, Crown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { PETS, type Pet } from "@/data/pets";
 import { formatNumber } from "@/lib/utils";
 import { trackOnce } from "@/lib/use-plausible";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
-type TierFilter = "all" | "watchlist" | "mythic" | "legendary" | "rare" | "uncommon" | "common" | "unknown";
+type TierFilter = "all" | "super" | "mythic" | "legendary" | "rare" | "uncommon" | "common" | "unknown";
 
 const TIER_PRESETS: { id: TierFilter; label: string }[] = [
   { id: "all",       label: "All" },
@@ -15,8 +15,8 @@ const TIER_PRESETS: { id: TierFilter; label: string }[] = [
   { id: "rare",      label: "Rare" },
   { id: "legendary", label: "Legendary" },
   { id: "mythic",    label: "Mythic" },
+  { id: "super",     label: "Super" },
   { id: "unknown",   label: "Unknown" },
-  { id: "watchlist", label: "Watchlist" },
 ];
 
 export function PetsPage() {
@@ -39,9 +39,9 @@ export function PetsPage() {
           <PawPrint className="h-7 w-7 text-emerald-400" /> Pets
         </h1>
         <p className="mt-2 text-muted-foreground max-w-2xl">
-          {PETS.length} pets in the wiki. Most are bought from map spawns for
-          Sheckles. Two (Gnome, Raccoon) are still on the community watchlist
-          with unconfirmed stats.
+          {PETS.length} pets in the wiki, all from map spawns priced in
+          Sheckles. Three Supers — Raccoon, Ice Serpent, Black Dragon — top
+          the late-game ladder.
         </p>
       </div>
 
@@ -94,7 +94,6 @@ function PetCard({
   onToggle: () => void;
 }) {
   const isPending = pet.basePrice === null;
-  const isWatchlist = pet.tier === "watchlist";
   return (
     <Card className="h-full transition-all hover:border-emerald-400/40">
       <button
@@ -131,9 +130,9 @@ function PetCard({
             value={pet.basePrice !== null ? `${formatNumber(pet.basePrice)} ¢` : "TBD"}
           />
           <Stat
-            icon={isWatchlist ? <Sparkles className="h-3 w-3" /> : <Crown className="h-3 w-3" />}
-            label={isWatchlist ? "Status" : "Obtainment"}
-            value={isPending ? "Pending" : isWatchlist ? "Watchlist" : "Map spawn"}
+            icon={<Crown className="h-3 w-3" />}
+            label="Obtainment"
+            value={isPending ? "Pending" : "Map spawn"}
           />
         </div>
       </button>

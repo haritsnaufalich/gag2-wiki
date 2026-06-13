@@ -8,7 +8,7 @@ export interface Pet {
   name: string;
   emoji: string;
   /** Canonical tier as listed on growagarden2wiki.com. */
-  tier: TierId | "watchlist";
+  tier: TierId;
   /** Sheckle cost. null when source marks it as TBD. */
   basePrice: number | null;
   /** One-line description of the passive (own wording, sourced from the wiki). */
@@ -18,16 +18,7 @@ export interface Pet {
 }
 
 export const PETS: Pet[] = [
-  {
-    slug: "bunny",
-    name: "Bunny",
-    emoji: "🐰",
-    tier: "common",
-    basePrice: 20000,
-    ability: "+5 Walk Speed",
-    blurb: "Tails never stop bouncing. A small, constant movement buff that makes getting around the garden feel snappier.",
-    tags: ["movement", "common"],
-  },
+  // ── Common ─────────────────────────────────────────────
   {
     slug: "frog",
     name: "Frog",
@@ -39,6 +30,18 @@ export const PETS: Pet[] = [
     tags: ["movement", "common"],
   },
   {
+    slug: "bunny",
+    name: "Bunny",
+    emoji: "🐰",
+    tier: "common",
+    basePrice: 20000,
+    ability: "+5 Walk Speed",
+    blurb: "Tails never stop bouncing. A small, constant movement buff that makes getting around the garden feel snappier.",
+    tags: ["movement", "common"],
+  },
+
+  // ── Uncommon ───────────────────────────────────────────
+  {
     slug: "owl",
     name: "Owl",
     emoji: "🦉",
@@ -48,16 +51,8 @@ export const PETS: Pet[] = [
     blurb: "Sits on the highest plot and silently widens what you can see when the day/night cycle flips.",
     tags: ["vision", "night"],
   },
-  {
-    slug: "big-owl",
-    name: "Big Owl",
-    emoji: "🦉",
-    tier: "uncommon",
-    basePrice: 50000,
-    ability: "+25% Night View Distance",
-    blurb: "The Big variant of the standard owl. Doubles the night-view buff, worth the extra Sheckles if you farm after dark.",
-    tags: ["vision", "night", "size-big"],
-  },
+
+  // ── Rare ───────────────────────────────────────────────
   {
     slug: "deer",
     name: "Deer",
@@ -68,16 +63,8 @@ export const PETS: Pet[] = [
     blurb: "A small, persistent growth boost on every plot. Best paired with high-value long-cycle crops.",
     tags: ["growth"],
   },
-  {
-    slug: "gnome",
-    name: "Gnome",
-    emoji: "🧙",
-    tier: "unknown",
-    basePrice: null,
-    ability: "To be confirmed",
-    blurb: "Lurks in unusual garden corners. Ability and price are still TBD on the wiki — community is watching.",
-    tags: ["pending", "mystery"],
-  },
+
+  // ── Legendary ──────────────────────────────────────────
   {
     slug: "robin",
     name: "Robin",
@@ -98,25 +85,69 @@ export const PETS: Pet[] = [
     blurb: "Stings anyone who tries to steal from your plots. High price tag, but pays for itself against raiders.",
     tags: ["defense", "legendary"],
   },
+
+  // ── Mythic ─────────────────────────────────────────────
+  {
+    slug: "monkey",
+    name: "Monkey",
+    emoji: "🐒",
+    tier: "mythic",
+    basePrice: 1000000,
+    ability: "Picks ripe fruit and brings it to you",
+    blurb: "Swings around the garden and grabs ripe fruit for you. A hands-off harvester for high-value plots.",
+    tags: ["loot", "mythic"],
+  },
   {
     slug: "golden-dragonfly",
     name: "Golden Dragonfly",
     emoji: "🪰",
     tier: "mythic",
-    basePrice: 3000000,
+    basePrice: 9000000,
     ability: "2x Gold Chance",
     blurb: "The apex pet. Doubles the chance of any fruit you harvest turning Gold. Late-game Sheckle engine.",
     tags: ["loot", "mythic", "gold"],
   },
   {
+    slug: "unicorn",
+    name: "Unicorn",
+    emoji: "🦄",
+    tier: "mythic",
+    basePrice: 12000000,
+    ability: "2x Rainbow Chance",
+    blurb: "Trots through the garden and doubles the chance of a Rainbow-mutated fruit. Pairs with any 40x plan.",
+    tags: ["loot", "mythic", "rainbow"],
+  },
+
+  // ── Super ──────────────────────────────────────────────
+  {
     slug: "raccoon",
     name: "Raccoon",
     emoji: "🦝",
-    tier: "watchlist",
-    basePrice: null,
-    ability: "Not confirmed",
-    blurb: "On the wiki's watchlist. Spawns unconfirmed; price and ability TBD — community data only.",
-    tags: ["pending", "watchlist"],
+    tier: "super",
+    basePrice: 15000000,
+    ability: "+25 Steal Limit",
+    blurb: "Sneaks out at night to steal fruit from empty gardens and lifts your own steal cap by +25. A raider's best friend.",
+    tags: ["loot", "super", "steal"],
+  },
+  {
+    slug: "ice-serpent",
+    name: "Ice Serpent",
+    emoji: "🐍",
+    tier: "super",
+    basePrice: 20000000,
+    ability: "Frost breath freezes intruders",
+    blurb: "Flies around the garden and breathes frost on raiders, freezing them solid mid-theft. Premium defense.",
+    tags: ["defense", "super"],
+  },
+  {
+    slug: "black-dragon",
+    name: "Black Dragon",
+    emoji: "🐉",
+    tier: "super",
+    basePrice: 1000000,
+    ability: "Fire breath sets intruders ablaze",
+    blurb: "Soars above the plot and torches anyone who tries to take your fruit. Lower price than the other Supers.",
+    tags: ["defense", "super"],
   },
 ];
 
@@ -129,6 +160,6 @@ export function getPetBySlug(slug: string): Pet | undefined {
   return PET_MAP[slug];
 }
 
-export function petsByTier(tier: TierId | "watchlist"): Pet[] {
+export function petsByTier(tier: TierId): Pet[] {
   return PETS.filter((p) => p.tier === tier);
 }

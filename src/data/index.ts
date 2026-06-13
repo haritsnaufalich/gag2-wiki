@@ -11,7 +11,7 @@ export const WIKI_STATS = {
   totalCrops: 30,
   totalTiers: 8,
   totalMutations: 6,
-  totalPets: 10,
+  totalPets: 12,
   totalGears: 27,
   totalEggs: 3,
   totalSeedPacks: 4,
