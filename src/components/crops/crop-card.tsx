@@ -53,7 +53,7 @@ export function CropCard({ crop, hrefBase = "/crops" }: CropCardProps) {
             <Stat
               icon={<Clock className="h-3 w-3" />}
               label="Grow"
-              value={crop.growTimeSec > 0 ? formatGrowTime(crop.growTimeSec) : "—"}
+              value={crop.growTimeSec != null && crop.growTimeSec > 0 ? formatGrowTime(crop.growTimeSec) : "—"}
             />
             <Stat
               icon={<Repeat className="h-3 w-3" />}

@@ -32,7 +32,7 @@ export function CropDetailPage() {
   ).slice(0, 4);
 
   const shecklesPerHour =
-    crop.growTimeSec > 0
+    crop.growTimeSec !== null && crop.growTimeSec > 0
       ? (3600 / crop.growTimeSec) * crop.baseValue
       : 0;
 
@@ -92,7 +92,7 @@ export function CropDetailPage() {
             <StatCard
               icon={<Clock className="h-4 w-4" />}
               label="Grow time"
-              value={crop.growTimeSec > 0 ? formatGrowTime(crop.growTimeSec) : "TBD"}
+              value={crop.growTimeSec !== null && crop.growTimeSec > 0 ? formatGrowTime(crop.growTimeSec) : "TBD"}
               accent="text-sky-400"
             />
             <StatCard

@@ -53,17 +53,41 @@ export function ComparePage() {
         <StatBlock
           icon={<Timer className="h-4 w-4" />}
           label="Grow time"
-          a={a.growTimeSec > 0 ? formatGrowTime(a.growTimeSec) : "TBD"}
-          b={b.growTimeSec > 0 ? formatGrowTime(b.growTimeSec) : "TBD"}
-          winner={a.growTimeSec === b.growTimeSec ? 0 : a.growTimeSec < b.growTimeSec ? 1 : -1}
+          a={a.growTimeSec != null && a.growTimeSec > 0 ? formatGrowTime(a.growTimeSec) : "TBD"}
+          b={b.growTimeSec != null && b.growTimeSec > 0 ? formatGrowTime(b.growTimeSec) : "TBD"}
+          winner={
+            a.growTimeSec != null && b.growTimeSec != null
+              ? a.growTimeSec === b.growTimeSec
+                ? 0
+                : a.growTimeSec < b.growTimeSec
+                  ? 1
+                  : -1
+              : 0
+          }
           reverseWin
         />
         <StatBlock
           icon={<TrendingUp className="h-4 w-4" />}
           label="Sheckles / hour"
-          a={a.growTimeSec > 0 ? `${formatNumber(stats.a.shecklesPerHour)} ¢` : "—"}
-          b={b.growTimeSec > 0 ? `${formatNumber(stats.b.shecklesPerHour)} ¢` : "—"}
-          winner={a.growTimeSec === b.growTimeSec ? 0 : a.growTimeSec < b.growTimeSec ? 1 : -1}
+          a={a.growTimeSec != null && a.growTimeSec > 0 ? `${formatNumber(stats.a.shecklesPerHour)} ¢` : "—"}
+          b={b.growTimeSec != null && b.growTimeSec > 0 ? `${formatNumber(stats.b.shecklesPerHour)} ¢` : "—"}
+          winner={
+            a.growTimeSec != null && b.growTimeSec != null
+              ? a.growTimeSec === b.growTimeSec
+                ? 0
+                : a.growTimeSec < b.growTimeSec
+                  ? 1
+                  : -1
+              : 0
+          }
+          reverseWin
+        />
+        <StatBlock
+          icon={<TrendingUp className="h-4 w-4" />}
+          label="Sheckles / hour"
+          a={a.growTimeSec != null && a.growTimeSec > 0 ? `${formatNumber(stats.a.shecklesPerHour)} ¢` : "—"}
+          b={b.growTimeSec != null && b.growTimeSec > 0 ? `${formatNumber(stats.b.shecklesPerHour)} ¢` : "—"}
+          winner={a.growTimeSec != null && b.growTimeSec != null ? a.growTimeSec === b.growTimeSec ? 0 : a.growTimeSec < b.growTimeSec ? 1 : -1 : 0}
           reverseWin
         />
       </div>
@@ -196,7 +220,7 @@ function MutationCeiling({ crop, accent }: { crop: typeof aDefault; accent: stri
 function buildStats(a: typeof aDefault, b: typeof aDefault) {
   const calc = (c: typeof aDefault) => ({
     shecklesPerHour:
-      c.growTimeSec > 0 ? (3600 / c.growTimeSec) * c.baseValue : 0,
+      c.growTimeSec !== null && c.growTimeSec != null && c.growTimeSec > 0 ? (3600 / c.growTimeSec) * c.baseValue : 0,
   });
   return { a: calc(a), b: calc(b) };
 }

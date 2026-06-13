@@ -13,6 +13,8 @@ import { trackOnce } from "@/lib/use-plausible";
 export function CalculatorPage() {
   const [cropSlug, setCropSlug] = useState(CROPS[12].slug);
   const [quantity, setQuantity] = useState(1);
+  const [weightG, setWeightG] = useState<number>(1);
+  const [friendBoostPct, setFriendBoostPct] = useState<number>(0);
   const [active, setActive] = useState<Set<string>>(new Set());
 
   const crop = CROPS.find((c) => c.slug === cropSlug) ?? CROPS[0];
@@ -20,30 +22,39 @@ export function CalculatorPage() {
   const { effective, multiplier, activatedMutations } = useMemo(() => {
     const activated = MUTATIONS.filter((m) => active.has(m.slug));
     const mult = activated.reduce((acc, m) => acc * m.multiplier, 1);
+    const boostMult = 1 + friendBoostPct / 100;
+    // Per-weight value: average value per gram, then scaled by chosen weight.
+    const baseValueAtWeight =
+      crop.weightAvgG && crop.valueAvg
+        ? (crop.valueAvg / crop.weightAvgG) * weightG
+        : crop.baseValue;
+    const boosted = baseValueAtWeight * mult * boostMult;
     return {
-      effective: crop.baseValue * mult * quantity,
+      effective: boosted * quantity,
       multiplier: mult,
       activatedMutations: activated,
     };
-  }, [crop, quantity, active]);
+  }, [crop, quantity, weightG, friendBoostPct, active]);
 
-  // Fire one Plausible event per distinct (crop, mutations, qty) combo
+  // Fire one Plausible event per distinct (crop, mutations, qty, weight, boost) combo
   // — repeated clicks on the same setup don't spam the dashboard.
   useEffect(() => {
     trackOnce(
       "Calculator use",
-      `calc:${crop.slug}:${quantity}:${[...active].sort().join(",")}`,
+      `calc:${crop.slug}:${quantity}:${weightG}:${friendBoostPct}:${[...active].sort().join(",")}`,
       {
         crop: crop.slug,
         quantity,
+        weight: weightG,
+        friendBoost: friendBoostPct,
         mutations: active.size,
         tier: crop.tier,
       }
     );
-  }, [crop.slug, quantity, active, crop.tier]);
+  }, [crop.slug, quantity, weightG, friendBoostPct, active, crop.tier]);
 
   const shecklesPerHour =
-    crop.growTimeSec > 0
+    crop.growTimeSec && crop.growTimeSec != null && crop.growTimeSec > 0
       ? ((3600 / crop.growTimeSec) * effective) / quantity
       : 0;
 
@@ -63,8 +74,8 @@ export function CalculatorPage() {
           <CalcIcon className="h-7 w-7 text-emerald-400" /> Value Calculator
         </h1>
         <p className="mt-2 text-muted-foreground max-w-2xl">
-          Pick a crop, pick your mutations, watch the math. Multipliers
-          compound multiplicatively — your effective value grows fast.
+          Pick a crop, set a weight, pick your mutations, watch the math.
+          Multipliers compound multiplicatively — your effective value grows fast.
         </p>
       </div>
 
@@ -81,7 +92,11 @@ export function CalculatorPage() {
                   return (
                     <button
                       key={c.slug}
-                      onClick={() => setCropSlug(c.slug)}
+                      onClick={() => {
+                        setCropSlug(c.slug);
+                        // Snap weight to canonical avg if known
+                        if (c.weightAvgG) setWeightG(c.weightAvgG);
+                      }}
                       className={cn(
                         "flex items-center gap-2 rounded-md border p-2 text-left text-sm transition-colors",
                         isActive
@@ -112,10 +127,52 @@ export function CalculatorPage() {
               />
             </div>
 
+            <div>
+              <label className="text-xs uppercase tracking-wider text-muted-foreground flex items-center justify-between">
+                <span>Weight (g)</span>
+                {crop.weightAvgG && (
+                  <span className="text-emerald-400 normal-case tracking-normal text-[10px]">
+                    avg {crop.weightAvgG}g
+                  </span>
+                )}
+              </label>
+              <Input
+                type="number"
+                min={0.1}
+                step={0.1}
+                value={weightG}
+                onChange={(e) =>
+                  setWeightG(Math.max(0.1, Number(e.target.value) || 0.1))
+                }
+                className="mt-2"
+              />
+            </div>
+
+            <div>
+              <label className="text-xs uppercase tracking-wider text-muted-foreground flex items-center justify-between">
+                <span>Friend boost</span>
+                <span className="text-emerald-400 normal-case tracking-normal text-[10px]">
+                  +{friendBoostPct}%
+                </span>
+              </label>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                step={5}
+                value={friendBoostPct}
+                onChange={(e) => setFriendBoostPct(Number(e.target.value))}
+                className="mt-3 w-full accent-emerald-500"
+                aria-label="Friend boost percent"
+              />
+            </div>
+
             <div className="pt-3 border-t border-border/40 space-y-1.5 text-xs">
               <Row label="Tier" value={TIER_MAP[crop.tier].label} />
-              <Row label="Grow time" value={crop.growTimeSec > 0 ? `${crop.growTimeSec}s` : "TBD"} />
+              <Row label="Grow time" value={crop.growTimeSec && crop.growTimeSec != null && crop.growTimeSec > 0 ? `${crop.growTimeSec}s` : "TBD"} />
               <Row label="Multi-harvest" value={crop.multiHarvest ? "Yes" : "No"} />
+              <Row label="Avg weight" value={crop.weightAvgG !== null ? `${crop.weightAvgG}g` : "TBD"} />
+              <Row label="Huge chance" value={crop.hugeChancePct !== null ? `${crop.hugeChancePct}%` : "TBD"} />
               {crop.seedPriceSheckles !== null && (
                 <Row label="Seed price" value={`${formatNumber(crop.seedPriceSheckles)} ¢`} />
               )}
@@ -134,7 +191,11 @@ export function CalculatorPage() {
               </div>
               <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3 text-sm text-muted-foreground">
                 <span>
-                  {formatNumber(crop.baseValue)} ¢ ×{" "}
+                  {formatNumber(
+                    crop.weightAvgG && crop.valueAvg
+                      ? (crop.valueAvg / crop.weightAvgG) * weightG
+                      : crop.baseValue
+                  )} ¢ ×{" "}
                   <span className="text-foreground font-medium">
                     {quantity}
                   </span>{" "}
@@ -147,6 +208,15 @@ export function CalculatorPage() {
                   </span>{" "}
                   mutations
                 </span>
+                {friendBoostPct > 0 && (
+                  <span>
+                    ×{" "}
+                    <span className="text-foreground font-medium">
+                      1.{String(friendBoostPct).padStart(2, "0")}
+                    </span>{" "}
+                    friend boost
+                  </span>
+                )}
                 {activatedMutations.length > 0 && (
                   <Button
                     size="sm"
@@ -161,7 +231,7 @@ export function CalculatorPage() {
             </CardContent>
           </Card>
 
-          {crop.growTimeSec > 0 && (
+          {crop.growTimeSec != null && crop.growTimeSec > 0 && (
             <div className="grid gap-3 sm:grid-cols-2">
               <Card>
                 <CardContent className="p-4 flex items-center gap-3">
