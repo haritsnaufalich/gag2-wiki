@@ -170,7 +170,16 @@ export function CalculatorPage() {
             <div className="pt-3 border-t border-border/40 space-y-1.5 text-xs">
               <Row label="Tier" value={TIER_MAP[crop.tier].label} />
               <Row label="Grow time" value={crop.growTimeSec && crop.growTimeSec != null && crop.growTimeSec > 0 ? `${crop.growTimeSec}s` : "TBD"} />
-              <Row label="Multi-harvest" value={crop.multiHarvest ? "Yes" : "No"} />
+              <Row
+                label="Multi-harvest"
+                value={
+                  crop.multiHarvest === "multi"
+                    ? "Yes"
+                    : crop.multiHarvest === "single"
+                      ? "No"
+                      : "—"
+                }
+              />
               <Row label="Avg weight" value={crop.weightAvgG !== null ? `${crop.weightAvgG}g` : "TBD"} />
               <Row label="Huge chance" value={crop.hugeChancePct !== null ? `${crop.hugeChancePct}%` : "TBD"} />
               {crop.seedPriceSheckles !== null && (

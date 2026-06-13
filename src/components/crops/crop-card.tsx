@@ -58,7 +58,13 @@ export function CropCard({ crop, hrefBase = "/crops" }: CropCardProps) {
             <Stat
               icon={<Repeat className="h-3 w-3" />}
               label="Multi"
-              value={crop.multiHarvest ? "Yes" : "No"}
+              value={
+                crop.multiHarvest === "multi"
+                  ? "Yes"
+                  : crop.multiHarvest === "single"
+                    ? "No"
+                    : "—"
+              }
             />
             <Stat
               icon={<Coins className="h-3 w-3" />}

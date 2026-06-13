@@ -98,7 +98,13 @@ export function CropDetailPage() {
             <StatCard
               icon={<Repeat className="h-4 w-4" />}
               label="Multi-harvest"
-              value={crop.multiHarvest ? "Yes" : "No"}
+              value={
+                crop.multiHarvest === "multi"
+                  ? "Yes"
+                  : crop.multiHarvest === "single"
+                    ? "No"
+                    : "—"
+              }
               accent="text-violet-400"
             />
             <StatCard
