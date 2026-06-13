@@ -2,6 +2,14 @@ import { Outlet, ScrollRestoration } from "react-router-dom";
 import { Header } from "./header";
 import { Footer } from "./footer";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { usePlausible } from "@/lib/use-plausible";
+
+function RouteTracker() {
+  // Must run inside <Outlet /> so it has access to the router
+  // context (useLocation needs a Router ancestor).
+  usePlausible();
+  return null;
+}
 
 export function SiteLayout() {
   return (
@@ -14,6 +22,7 @@ export function SiteLayout() {
       </a>
       <Header />
       <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">
+        <RouteTracker />
         <ErrorBoundary>
           <Outlet />
         </ErrorBoundary>

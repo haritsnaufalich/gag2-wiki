@@ -13,7 +13,6 @@
   "categories": ["games", "lifestyle", "utilities"],
   "theme_color": "#0a0a0a",
   "background_color": "#0a0a0a",
-  "scope_extensions": [{ "origin": "https://haritsnaufalich.github.io" }],
   "icons": [
     {
       "src": "favicon.svg",
