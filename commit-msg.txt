@@ -1,20 +1,36 @@
-Hash-router -> browser-router migration shim in index.html + 404.html
+Design tokens: src/lib/tokens.ts + value-curve-chart refactor
 
-External links and bookmarks that point at the old hash format
-(/#/crops, /#/crops/bamboo, /#/calculator?weight=1, ...) silently
-landed on the home page after the browser-router switch, because
-createBrowserRouter reads window.location.pathname (which never
-includes the hash) and not the hash.
+Added src/lib/tokens.ts as a single source of truth for the values
+Tailwind classes can't easily reach (SVG fills, inline style={}
+blocks, canvas, third-party widgets). Hex values mirror Tailwind's
+palette so visual consistency is automatic when both systems agree.
 
-Add a 14-line IIFE to both index.html and 404.html that runs
-before the React bundle. It detects the old '#/' prefix and
-rewrites the URL via history.replaceState (so the back button
-stays clean). Search params are preserved.
+Tokens shipped:
+- colors: brand + accent hex (emerald400, emerald500, amber400,
+  rose500, sky400, violet400, lime500, slate900)
+- rgb: same as colors but in rgb(R G B) form for SVG attributes
+- chart: chart-specific palette (curve, point, pointRing) for the
+  value-curve chart
+- font: family (Poppins)
+- types: ColorToken, RgbToken, ChartToken
 
-- Strict prefix check: only matches '#/' (not '#section' anchors)
-- IIFE — no global pollution
-- replaceState — no extra history entry
-- runs synchronously, before the module script tag
+value-curve-chart.tsx refactor:
+- Removed local CURVE_COLOR / POINT_COLOR / POINT_RING constants
+  (3 hardcoded rgb() strings)
+- Replaced the inline `style={{ ..., stroke: 'rgb(15 23 42)' }}`
+  on point labels with `chart.pointRing`
+- Now imports { chart } from '@/lib/tokens' — single source of
+  truth for the chart palette
 
-This can be removed in a few months once external references
-have migrated. Comments at the top of each block explain why.
+If a future contributor needs to tweak the chart colors, they
+change tokens.ts instead of hunting for rgb() strings.
+
+No behavior change. Bundle impact: +0.13 kB on the main chunk
+(tokens.ts is small). crop-detail-page chunk went from 11.69 kB
+to 11.82 kB (it owns the chart, so the import lands here rather
+than the main bundle — Vite hoist decisions).
+
+Audit note: only value-curve-chart had hardcoded colors. The
+rest of the project uses Tailwind classes, which IS the token
+system for component JSX. This file is for the non-Tailwind
+exceptions.

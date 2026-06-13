@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import type { ValueCurve, ValueObservation } from "@/data/crops";
+import { chart } from "@/lib/tokens";
 
 interface ValueCurveChartProps {
   curve: ValueCurve;
@@ -13,9 +14,6 @@ const PAD_L = 60;
 const PAD_R = 20;
 const PAD_T = 20;
 const PAD_B = 40;
-const CURVE_COLOR = "rgb(52 211 153)"; // emerald-400
-const POINT_COLOR = "rgb(251 191 36)"; // amber-400
-const POINT_RING = "rgb(15 23 42)";    // slate-900
 
 export function ValueCurveChart({
   curve,
@@ -185,7 +183,7 @@ export function ValueCurveChart({
         <path
           d={pathD}
           fill="none"
-          stroke={CURVE_COLOR}
+          stroke={chart.curve}
           strokeWidth="2.5"
           strokeLinecap="round"
         />
@@ -198,7 +196,7 @@ export function ValueCurveChart({
               y1={yScale(obs.value)}
               x2={xScale(obs.weightG)}
               y2={PAD_T + plotH}
-              stroke={POINT_COLOR}
+              stroke={chart.point}
               strokeOpacity="0.25"
               strokeDasharray="3 3"
             />
@@ -206,8 +204,8 @@ export function ValueCurveChart({
               cx={xScale(obs.weightG)}
               cy={yScale(obs.value)}
               r="5"
-              fill={POINT_COLOR}
-              stroke={POINT_RING}
+              fill={chart.point}
+              stroke={chart.pointRing}
               strokeWidth="2"
             />
             <text
@@ -217,7 +215,7 @@ export function ValueCurveChart({
               fontSize="10"
               fill="currentColor"
               fillOpacity="0.85"
-              style={{ paintOrder: "stroke", stroke: "rgb(15 23 42)", strokeWidth: 3 }}
+              style={{ paintOrder: "stroke", stroke: chart.pointRing, strokeWidth: 3 }}
             >
               {(obs.weightG / 1000).toFixed(2)} kg ·{" "}
               {Math.round(obs.value).toLocaleString()}¢
@@ -241,8 +239,8 @@ export function ValueCurveChart({
               cx={xScale(hover.g)}
               cy={yScale(hover.v)}
               r="4"
-              fill={CURVE_COLOR}
-              stroke={POINT_RING}
+              fill={chart.curve}
+              stroke={chart.pointRing}
               strokeWidth="2"
             />
           </g>
