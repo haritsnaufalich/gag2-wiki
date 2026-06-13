@@ -6,6 +6,8 @@
  *       * HTML (navigate): network-first, fall back to cache
  *       * everything else same-origin GET: stale-while-revalidate
  *   - skips non-GET and cross-origin requests
+ *   - waits for explicit client message before activating new versions
+ *     (controlled by the UpdatePrompt UI — no jarring mid-session reloads)
  */
 const VERSION = 'v1';
 const CACHE = `gag2-wiki-${VERSION}`;
@@ -15,6 +17,7 @@ const PRECACHE = [
   './index.html',
   './favicon.svg',
   './og-image.svg',
+  './og-image.png',
   './robots.txt',
   './sitemap.xml',
   './manifest.webmanifest',
@@ -25,8 +28,10 @@ const PRECACHE = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(PRECACHE)).then(() => self.skipWaiting())
+    caches.open(CACHE).then((cache) => cache.addAll(PRECACHE))
   );
+  // Note: no self.skipWaiting() here. The new SW waits until the user
+  // confirms via the UpdatePrompt component, then messages us to activate.
 });
 
 self.addEventListener('activate', (event) => {
@@ -35,6 +40,12 @@ self.addEventListener('activate', (event) => {
       .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener('fetch', (event) => {
