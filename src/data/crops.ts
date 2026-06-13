@@ -220,7 +220,7 @@ export const CROPS: Crop[] = [
     seedPriceRobux: null,
     valueFloor: null,
     valueAvg: null,
-    valuePerGram: 0.2170, // user-verified: 4.89kg + 10% friends = 846¢
+    valuePerGram: 0.2681, // user-verified: 9.97kg + 10% friends = 2.94k¢
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
