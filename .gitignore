@@ -49,3 +49,6 @@ lerna-debug.log*
 
 # TypeScript build cache
 *.tsbuildinfo
+
+# One-off PowerShell asset-generation script (not part of the build)
+gen-assets.ps1

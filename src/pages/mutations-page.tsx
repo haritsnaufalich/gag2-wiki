@@ -125,7 +125,7 @@ function Section({
                     meta.tint
                   )}
                 >
-                  ×{m.multiplier}
+                  {m.multiplier != null ? `×${m.multiplier}` : "TBA"}
                 </div>
               </div>
               <div>

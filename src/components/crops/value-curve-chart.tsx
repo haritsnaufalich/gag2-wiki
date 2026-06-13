@@ -100,14 +100,16 @@ export function ValueCurveChart({
         )}
       </div>
 
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        width="100%"
-        height={height}
-        role="img"
-        aria-label="Value curve plot"
-        className="text-foreground select-none"
-      >
+      <div className="aspect-[2/1] min-h-[220px] sm:aspect-[16/9] sm:min-h-[260px]">
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          preserveAspectRatio="xMidYMid meet"
+          width="100%"
+          height="100%"
+          role="img"
+          aria-label="Value curve plot"
+          className="text-foreground select-none"
+        >
         {/* Horizontal grid */}
         {yTicks.map((p, i) => {
           const y = p * yMaxData;
@@ -281,6 +283,7 @@ export function ValueCurveChart({
           Raw value (¢)
         </text>
       </svg>
+      </div>
     </div>
   );
 }

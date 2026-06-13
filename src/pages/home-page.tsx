@@ -58,7 +58,7 @@ export function HomePage() {
             </Button>
           </div>
 
-          <div className="mt-10 grid grid-cols-3 sm:grid-cols-7 gap-3 max-w-3xl">
+          <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 max-w-3xl">
             <Stat label="Crops" value={WIKI_STATS.totalCrops.toString()} />
             <Stat label="Tiers" value={WIKI_STATS.totalTiers.toString()} />
             <Stat label="Mutations" value={WIKI_STATS.totalMutations.toString()} />
