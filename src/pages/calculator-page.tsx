@@ -35,14 +35,18 @@ export function CalculatorPage() {
       .reduce((sum, m) => sum + (m.multiplier ?? 0), 0);
     const mult = variantMult * (1 + weatherMult);
     const boostMult = 1 + friendBoostPct / 100;
-    // Per-weight value: per-gram override → avg ratio → flat baseValue.
-    // valuePerGram is set from a verified in-game observation (currently
-    // only bamboo, calibrated at 4.89kg + 10% friends = 846¢).
-    const baseValueAtWeight = crop.valuePerGram
-      ? crop.valuePerGram * weightG
-      : crop.weightAvgG && crop.valueAvg
-        ? (crop.valueAvg / crop.weightAvgG) * weightG
-        : crop.baseValue;
+    // Per-weight value, in priority order:
+    //   1. Fitted value curve (multi-point calibration)
+    //   2. Per-gram override (single observation)
+    //   3. valueAvg/weightAvgG ratio
+    //   4. flat baseValue fallback
+    const baseValueAtWeight = crop.valueCurve
+      ? crop.valueCurve.a * Math.pow(weightG, crop.valueCurve.alpha)
+      : crop.valuePerGram
+        ? crop.valuePerGram * weightG
+        : crop.weightAvgG && crop.valueAvg
+          ? (crop.valueAvg / crop.weightAvgG) * weightG
+          : crop.baseValue;
     const boosted = baseValueAtWeight * mult * boostMult;
     return {
       effective: boosted * quantity,

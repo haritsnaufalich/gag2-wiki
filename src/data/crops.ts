@@ -1,5 +1,23 @@
 import type { TierId } from "./tiers";
 
+/** A (weight, raw value) data point for a crop's value curve. */
+export interface ValueObservation {
+  /** Weight in grams. */
+  weightG: number;
+  /** Raw sell value in Sheckles (no friend boost, no mutation). */
+  value: number;
+}
+
+/** A fitted value curve, parameterised so the calculator can evaluate
+ *  `value(weightG) = ...` directly. */
+export interface ValueCurve {
+  type: "power";
+  /** Coefficient: value = a * weightG^alpha. */
+  a: number;
+  /** Exponent. */
+  alpha: number;
+}
+
 export type Obtainment =
   | "shop"
   | "code"
@@ -34,6 +52,18 @@ export interface Crop {
    * Overrides the `valueAvg / weightAvgG` ratio and `baseValue` fallback.
    */
   valuePerGram: number | null;
+  /**
+   * Observed (weight, raw value) data points. Raw value = reported total ÷
+   * (1 + friend boost), so the curve is independent of friend-boost settings.
+   * Empty for unobserved crops. Stored for both 1-point crops (waiting on
+   * more data) and multi-point crops (source of truth for the curve fit).
+   */
+  valueObservations: ValueObservation[];
+  /**
+   * Fitted curve, or null when not enough observations to fit.
+   * When set, takes priority over `valuePerGram` in the calculator.
+   */
+  valueCurve: ValueCurve | null;
   /** Canonical Price-Floor Weight (grams). null when the source marks TBD. */
   weightFloorG: number | null;
   /** Canonical Average Weight (grams). null when the source marks TBD. */
@@ -81,6 +111,8 @@ export const CROPS: Crop[] = [
     valueFloor: 1,
     valueAvg: 1,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: 0.95,
     weightAvgG: 1.0,
     weightMinG: 0.70,
@@ -102,6 +134,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -125,6 +159,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -150,6 +186,8 @@ export const CROPS: Crop[] = [
         valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -173,6 +211,8 @@ export const CROPS: Crop[] = [
         valueFloor: null,
     valueAvg: null,
     valuePerGram: 0.0149,
+    valueObservations: [{ weightG: 1460, value: 21.82 }],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -196,6 +236,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -209,7 +251,8 @@ export const CROPS: Crop[] = [
   },
 
   // ── Rare ───────────────────────────────────────────────
-  {slug: "bamboo",
+  {
+    slug: "bamboo",
     name: "Bamboo",
     emoji: "🎋",
     tier: "rare",
@@ -221,6 +264,12 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: 0.2681, // user-verified: 9.97kg + 10% friends = 2.94k¢
+    valueObservations: [
+      { weightG: 4890, value: 769.09 },
+      { weightG: 7540, value: 1636.36 },
+      { weightG: 9970, value: 2672.73 },
+    ],
+    valueCurve: { type: "power", a: 0.000265, alpha: 1.750 },
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -244,6 +293,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -267,6 +318,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: 0.0339,
+    valueObservations: [{ weightG: 2550, value: 86.36 }],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -290,6 +343,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: 0.0045,
+    valueObservations: [{ weightG: 8250, value: 37.27 }],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -315,6 +370,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -338,6 +395,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: 0.1123,
+    valueObservations: [{ weightG: 2080, value: 233.64 }],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -362,6 +421,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: 0.0246,
+    valueObservations: [{ weightG: 2110, value: 51.82 }],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -385,6 +446,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: 0.0340,
+    valueObservations: [{ weightG: 4250, value: 144.55 }],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -408,6 +471,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -431,6 +496,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -456,6 +523,8 @@ export const CROPS: Crop[] = [
         valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -479,6 +548,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -502,6 +573,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -525,6 +598,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -550,6 +625,8 @@ export const CROPS: Crop[] = [
         valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -573,6 +650,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -596,6 +675,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -621,6 +702,8 @@ export const CROPS: Crop[] = [
         valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -644,6 +727,8 @@ export const CROPS: Crop[] = [
         valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -669,6 +754,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -692,6 +779,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -715,6 +804,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -738,6 +829,8 @@ export const CROPS: Crop[] = [
         valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
@@ -761,6 +854,8 @@ export const CROPS: Crop[] = [
     valueFloor: null,
     valueAvg: null,
     valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
     weightFloorG: null,
     weightAvgG: null,
     weightMinG: null,
