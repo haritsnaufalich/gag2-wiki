@@ -19,7 +19,7 @@ export const MUTATIONS: Mutation[] = [
     emoji: "🥇",
     kind: "variant",
     multiplier: 15,
-    source: "Weather · event rolls",
+    source: "Midas Event",
     blurb: "Solid gold variant. Big single-mutation multiplier.",
   },
   {
@@ -28,7 +28,7 @@ export const MUTATIONS: Mutation[] = [
     emoji: "🌈",
     kind: "variant",
     multiplier: 40,
-    source: "Rare weather · event rolls",
+    source: "Random Chance",
     blurb: "Full-spectrum variant. Top-tier single-mutation boost.",
   },
   {
@@ -36,8 +36,8 @@ export const MUTATIONS: Mutation[] = [
     name: "Frozen",
     emoji: "❄️",
     kind: "mutation",
-    multiplier: 10,
-    source: "Snow weather",
+    multiplier: 5,
+    source: "Snowfall weather",
     blurb: "Cryo-stasis mutation. Multiplies cleanly with variants.",
   },
   {
@@ -46,17 +46,8 @@ export const MUTATIONS: Mutation[] = [
     emoji: "⚡",
     kind: "mutation",
     multiplier: 80,
-    source: "Storm weather · event rolls",
+    source: "Lightning/Shocked weather",
     blurb: "High-voltage mutation. The biggest single mutation multiplier.",
-  },
-  {
-    slug: "starstruck",
-    name: "Starstruck",
-    emoji: "🌠",
-    kind: "mutation",
-    multiplier: 50,
-    source: "Meteor weather",
-    blurb: "Cosmic mutation. Astronomical when stacked with variants.",
   },
 ];
 

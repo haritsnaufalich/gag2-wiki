@@ -7,7 +7,8 @@ export * from "./systems";
 export const WIKI_STATS = {
   totalCrops: 30,
   totalTiers: 8,
-  totalMutations: 5,
+  totalMutations: 4,
+  totalPets: 10,
   totalSystems: 7,
   activeCode: "TEAMGREENBEAN",
   lastUpdated: "2026-06-13",

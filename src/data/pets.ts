@@ -1,263 +1,122 @@
 import type { TierId } from "./tiers";
 
-export type PetSlot = "garden" | "combat" | "utility";
-
-export type PetSize = "normal" | "big" | "huge";
-
-export interface PetSizeStats {
-  size: PetSize;
-  /** Multiplier on the base ability effect, e.g. 1.0 normal, 1.6 big, 2.4 huge. */
-  powerMultiplier: number;
-  /** Multiplier on the base price (Big/Huge variants are pricier). */
-  priceMultiplier: number;
-  /** Stealing payout when this size is stolen from another player. */
-  stealMultiplier: number;
-}
-
-export const SIZE_STATS: Record<PetSize, PetSizeStats> = {
-  normal: { size: "normal", powerMultiplier: 1.0, priceMultiplier: 1.0, stealMultiplier: 1.0 },
-  big:    { size: "big",    powerMultiplier: 1.6, priceMultiplier: 2.5, stealMultiplier: 2.0 },
-  huge:   { size: "huge",   powerMultiplier: 2.4, priceMultiplier: 6.0, stealMultiplier: 4.0 },
-};
+/** A pet slot corresponds to its pass-time activity on the garden. */
+export type PetSlot = "movement" | "vision" | "growth" | "defense" | "loot";
 
 export interface Pet {
   slug: string;
   name: string;
   emoji: string;
-  tier: TierId;
-  slot: PetSlot;
-  basePrice: number;
-  /** Short passive effect tag. */
-  passive: string;
-  /** One-line description (own wording). */
+  /** Canonical tier as listed on growagarden2wiki.com. */
+  tier: TierId | "watchlist";
+  /** Sheckle cost. null when source marks it as TBD. */
+  basePrice: number | null;
+  /** One-line description of the passive (own wording, sourced from the wiki). */
+  ability: string;
   blurb: string;
-  /** Where in the map this pet tends to spawn. */
-  spawnHint: string;
-  /** Active slots the pet occupies (most pets take 1). */
-  slotCost: number;
-  /** Tags for filtering. */
   tags: string[];
 }
 
 export const PETS: Pet[] = [
-  // ── Common ──────────────────────────────────────────────
   {
-    slug: "bee",
-    name: "Garden Bee",
-    emoji: "🐝",
+    slug: "bunny",
+    name: "Bunny",
+    emoji: "🐰",
     tier: "common",
-    slot: "garden",
-    basePrice: 500,
-    passive: "Pollinator",
-    blurb: "Visits adjacent crops during the day, nudging growth by a small percent.",
-    spawnHint: "Meadow zones and flower-heavy plots.",
-    slotCost: 1,
-    tags: ["pollinator", "daytime"],
+    basePrice: 20000,
+    ability: "+5 Walk Speed",
+    blurb: "Tails never stop bouncing. A small, constant movement buff that makes getting around the garden feel snappier.",
+    tags: ["movement", "common"],
   },
   {
-    slug: "ladybug",
-    name: "Ladybug",
-    emoji: "🐞",
+    slug: "frog",
+    name: "Frog",
+    emoji: "🐸",
     tier: "common",
-    slot: "garden",
-    basePrice: 400,
-    passive: "Pest Control",
-    blurb: "Eats aphids and mites; gives a small chance to skip a pest cycle on a plot.",
-    spawnHint: "Vegetable plots, low-light edges.",
-    slotCost: 1,
-    tags: ["pest-control", "vegetables"],
+    basePrice: 10000,
+    ability: "+5 Jump Height",
+    blurb: "Croaks once on map load, then quietly boosts jump height for the rest of the session.",
+    tags: ["movement", "common"],
   },
-  {
-    slug: "ant",
-    name: "Worker Ant",
-    emoji: "🐜",
-    tier: "common",
-    slot: "garden",
-    basePrice: 300,
-    passive: "Soil Turner",
-    blurb: "Aerates soil for a small, persistent yield bonus on its home plot.",
-    spawnHint: "Dirt patches near the south gate.",
-    slotCost: 1,
-    tags: ["yield", "soil"],
-  },
-
-  // ── Uncommon ────────────────────────────────────────────
-  {
-    slug: "cricket",
-    name: "Field Cricket",
-    emoji: "🦗",
-    tier: "uncommon",
-    slot: "utility",
-    basePrice: 1200,
-    passive: "Mood Setter",
-    blurb: "Ambient sounds lift gardener mood; gives a small passive XP bonus.",
-    spawnHint: "Tall grass and field edges.",
-    slotCost: 1,
-    tags: ["xp", "ambient"],
-  },
-  {
-    slug: "snail",
-    name: "Garden Snail",
-    emoji: "🐌",
-    tier: "uncommon",
-    slot: "garden",
-    basePrice: 1800,
-    passive: "Slow Fertilizer",
-    blurb: "Constant low-rate fertilizer on a slow tick; great for AFK plots.",
-    spawnHint: "Damp corners and after rain.",
-    slotCost: 1,
-    tags: ["fertilizer", "afk"],
-  },
-  {
-    slug: "moth",
-    name: "Lantern Moth",
-    emoji: "🦋",
-    tier: "uncommon",
-    slot: "garden",
-    basePrice: 2400,
-    passive: "Night Pollinator",
-    blurb: "Pollinates only at night, pairing well with night-active crops like Moon Bloom.",
-    spawnHint: "Near Moon Bloom or other night-bloom crops.",
-    slotCost: 1,
-    tags: ["night", "pollinator"],
-  },
-
-  // ── Rare ───────────────────────────────────────────────
-  {
-    slug: "fox",
-    name: "Garden Fox",
-    emoji: "🦊",
-    tier: "rare",
-    slot: "combat",
-    basePrice: 8500,
-    passive: "Pest Deterrent",
-    blurb: "Scares off birds and small pests; reduces the chance of value loss events.",
-    spawnHint: "Forest edges and around orchards.",
-    slotCost: 1,
-    tags: ["deterrent", "protection"],
-  },
-  {
-    slug: "rabbit",
-    name: "Lucky Rabbit",
-    emoji: "🐇",
-    tier: "rare",
-    slot: "utility",
-    basePrice: 11000,
-    passive: "Mutation Luck",
-    blurb: "A small but constant boost to mutation-roll odds on its home plot.",
-    spawnHint: "Carrot-heavy crops and dawn.",
-    slotCost: 1,
-    tags: ["mutation", "luck"],
-  },
-  {
-    slug: "squirrel",
-    name: "Hoarding Squirrel",
-    emoji: "🐿️",
-    tier: "rare",
-    slot: "utility",
-    basePrice: 14000,
-    passive: "Seed Finder",
-    blurb: "Periodically surfaces a free seed from the shop's lower tier.",
-    spawnHint: "Near tree lines and seed shops.",
-    slotCost: 1,
-    tags: ["shop", "seeds"],
-  },
-
-  // ── Epic ───────────────────────────────────────────────
   {
     slug: "owl",
-    name: "Garden Owl",
+    name: "Owl",
     emoji: "🦉",
-    tier: "epic",
-    slot: "garden",
-    basePrice: 38000,
-    passive: "Night Watch",
-    blurb: "Boosts yield of night-cycle crops and reduces theft attempts against you.",
-    spawnHint: "Tall perches and old barns at night.",
-    slotCost: 1,
-    tags: ["night", "anti-theft"],
+    tier: "uncommon",
+    basePrice: 25000,
+    ability: "+12.5% Night View Distance",
+    blurb: "Sits on the highest plot and silently widens what you can see when the day/night cycle flips.",
+    tags: ["vision", "night"],
   },
   {
-    slug: "hawk",
-    name: "Sky Hawk",
-    emoji: "🦅",
-    tier: "epic",
-    slot: "combat",
-    basePrice: 52000,
-    passive: "Aerial Patrol",
-    blurb: "Long passive: chance to intercept incoming theft attempts from other players.",
-    spawnHint: "Open sky zones and high perches.",
-    slotCost: 1,
-    tags: ["anti-theft", "aerial"],
+    slug: "big-owl",
+    name: "Big Owl",
+    emoji: "🦉",
+    tier: "uncommon",
+    basePrice: 50000,
+    ability: "+25% Night View Distance",
+    blurb: "The Big variant of the standard owl. Doubles the night-view buff, worth the extra Sheckles if you farm after dark.",
+    tags: ["vision", "night", "size-big"],
   },
   {
-    slug: "turtle",
-    name: "Garden Turtle",
-    emoji: "🐢",
-    tier: "epic",
-    slot: "garden",
-    basePrice: 64000,
-    passive: "Patient Growth",
-    blurb: "Slows growth by ~30% but boosts final value ~50% for crops on its home plot.",
-    spawnHint: "Near ponds and slow-water zones.",
-    slotCost: 1,
-    tags: ["value", "patience"],
+    slug: "deer",
+    name: "Deer",
+    emoji: "🦌",
+    tier: "rare",
+    basePrice: 50000,
+    ability: "+10% Plant Growth Speed",
+    blurb: "A small, persistent growth boost on every plot. Best paired with high-value long-cycle crops.",
+    tags: ["growth"],
   },
-
-  // ── Legendary ──────────────────────────────────────────
   {
-    slug: "dragon",
-    name: "Garden Dragon",
-    emoji: "🐉",
+    slug: "gnome",
+    name: "Gnome",
+    emoji: "🧙",
+    tier: "unknown",
+    basePrice: null,
+    ability: "To be confirmed",
+    blurb: "Lurks in unusual garden corners. Ability and price are still TBD on the wiki — community is watching.",
+    tags: ["pending", "mystery"],
+  },
+  {
+    slug: "robin",
+    name: "Robin",
+    emoji: "🐦",
     tier: "legendary",
-    basePrice: 220000,
-    slot: "combat",
-    passive: "Fire Breath",
-    blurb: "On a long timer, breathes fire that scares off rival raiders and burns pests.",
-    spawnHint: "Cave entrances and volcanic biomes (rare).",
-    slotCost: 2,
-    tags: ["combat", "legendary"],
+    basePrice: 75000,
+    ability: "Drops seeds from eaten fruit",
+    blurb: "Hops between ripe fruit and drops bonus seeds on the ground. A self-funding harvest helper.",
+    tags: ["loot", "legendary"],
   },
   {
-    slug: "unicorn",
-    name: "Luck Unicorn",
-    emoji: "🦄",
+    slug: "bee",
+    name: "Bee",
+    emoji: "🐝",
     tier: "legendary",
-    slot: "utility",
-    basePrice: 280000,
-    passive: "Aura of Fortune",
-    blurb: "Modest but constant boost to mutation rarity across all of your plots.",
-    spawnHint: "Rainbow zones and Starlight Grove (very rare).",
-    slotCost: 2,
-    tags: ["mutation", "legendary"],
-  },
-
-  // ── Mythic ─────────────────────────────────────────────
-  {
-    slug: "phoenix",
-    name: "Phoenix Chick",
-    emoji: "🔥",
-    tier: "mythic",
-    basePrice: 1200000,
-    slot: "utility",
-    passive: "Rebirth",
-    blurb: "Once per day, automatically revives a withered crop on its home plot.",
-    spawnHint: "Lava biomes only (extremely rare spawn).",
-    slotCost: 3,
-    tags: ["revive", "mythic"],
+    basePrice: 1000000,
+    ability: "Defends against intruders",
+    blurb: "Stings anyone who tries to steal from your plots. High price tag, but pays for itself against raiders.",
+    tags: ["defense", "legendary"],
   },
   {
-    slug: "celestial-dragon",
-    name: "Celestial Dragon",
-    emoji: "🐲",
+    slug: "golden-dragonfly",
+    name: "Golden Dragonfly",
+    emoji: "🪰",
     tier: "mythic",
-    basePrice: 3500000,
-    slot: "combat",
-    passive: "Apex Guardian",
-    blurb: "All stats +25%; doubles the Sheckle payout when it steals from other players.",
-    spawnHint: "Eclipse events only (one of a kind).",
-    slotCost: 3,
-    tags: ["mythic", "steal"],
+    basePrice: 3000000,
+    ability: "2x Gold Chance",
+    blurb: "The apex pet. Doubles the chance of any fruit you harvest turning Gold. Late-game Sheckle engine.",
+    tags: ["loot", "mythic", "gold"],
+  },
+  {
+    slug: "raccoon",
+    name: "Raccoon",
+    emoji: "🦝",
+    tier: "watchlist",
+    basePrice: null,
+    ability: "Not confirmed",
+    blurb: "On the wiki's watchlist. Spawns unconfirmed; price and ability TBD — community data only.",
+    tags: ["pending", "watchlist"],
   },
 ];
 
@@ -270,16 +129,6 @@ export function getPetBySlug(slug: string): Pet | undefined {
   return PET_MAP[slug];
 }
 
-export function petsByTier(tier: TierId): Pet[] {
+export function petsByTier(tier: TierId | "watchlist"): Pet[] {
   return PETS.filter((p) => p.tier === tier);
 }
-
-export function petsBySlot(slot: PetSlot): Pet[] {
-  return PETS.filter((p) => p.slot === slot);
-}
-
-export const SLOT_LABEL: Record<PetSlot, string> = {
-  garden: "Garden",
-  combat: "Combat",
-  utility: "Utility",
-};

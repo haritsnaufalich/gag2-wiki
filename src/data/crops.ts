@@ -3,7 +3,7 @@ import type { TierId } from "./tiers";
 export type Obtainment =
   | "shop"
   | "code"
-  | "pack"
+  | "unknown"
   | "event"
   | "premium";
 
@@ -402,32 +402,32 @@ export const CROPS: Crop[] = [
     tags: ["fire", "apex"],
   },
 
-  // ── Pack seeds (Ghost Pepper Pack) ─────────────────────
+  // ── Unknown seeds (the wiki) ─────────────────────
   {
     slug: "baby-cactus",
     name: "Baby Cactus",
     emoji: "🌵",
-    tier: "pack",
+    tier: "unknown",
     growTimeSec: 240,
     multiHarvest: true,
     seedPriceSheckles: null,
     baseValue: 3200,
     family: "special",
-    obtainment: "pack",
-    blurb: "Tiny desert starter. Pulled from the Ghost Pepper Pack.",
+    obtainment: "unknown",
+    blurb: "Tiny desert starter. Pulled from the the wiki.",
     tags: ["pack-exclusive", "starter"],
   },
   {
     slug: "horned-melon",
     name: "Horned Melon",
     emoji: "🍈",
-    tier: "pack",
+    tier: "unknown",
     growTimeSec: 600,
     multiHarvest: false,
     seedPriceSheckles: null,
     baseValue: 8800,
     family: "fruit",
-    obtainment: "pack",
+    obtainment: "unknown",
     blurb: "Spiky exotic fruit — a Pack-exclusive oddity.",
     tags: ["exotic", "pack-exclusive"],
   },
@@ -435,13 +435,13 @@ export const CROPS: Crop[] = [
     slug: "glow-mushroom",
     name: "Glow Mushroom",
     emoji: "🍄",
-    tier: "pack",
+    tier: "unknown",
     growTimeSec: 900,
     multiHarvest: true,
     seedPriceSheckles: null,
     baseValue: 14500,
     family: "fungus",
-    obtainment: "pack",
+    obtainment: "unknown",
     blurb: "Bioluminescent fungus. Luminous, Pack-only, and collectible.",
     tags: ["luminous", "pack-exclusive"],
   },
@@ -449,13 +449,13 @@ export const CROPS: Crop[] = [
     slug: "poison-ivy",
     name: "Poison Ivy",
     emoji: "🌿",
-    tier: "pack",
+    tier: "unknown",
     growTimeSec: 1500,
     multiHarvest: true,
     seedPriceSheckles: null,
     baseValue: 38000,
     family: "special",
-    obtainment: "pack",
+    obtainment: "unknown",
     blurb: "Vining toxic plant. Pack-exclusive and a top-tier event piece.",
     tags: ["toxic", "pack-exclusive"],
   },
@@ -463,13 +463,13 @@ export const CROPS: Crop[] = [
     slug: "ghost-pepper",
     name: "Ghost Pepper",
     emoji: "👻",
-    tier: "pack",
+    tier: "unknown",
     growTimeSec: 2700,
     multiHarvest: false,
     seedPriceSheckles: null,
     baseValue: 142000,
     family: "vegetable",
-    obtainment: "pack",
+    obtainment: "unknown",
     blurb: "Headliner of its own pack. Spicy, single-harvest, premium payout.",
     tags: ["pack-exclusive", "headline"],
   },
@@ -492,7 +492,7 @@ export function obtainmentLabel(o: Obtainment): string {
   switch (o) {
     case "shop": return "Seed Shop";
     case "code": return "Code Reward";
-    case "pack": return "Pack Drop";
+    case "unknown": return "Unknown Drop";
     case "event": return "Event Drop";
     case "premium": return "Robux Premium";
   }

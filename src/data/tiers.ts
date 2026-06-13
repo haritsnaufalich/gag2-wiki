@@ -6,7 +6,7 @@ export type TierId =
   | "legendary"
   | "mythic"
   | "super"
-  | "pack";
+  | "unknown";
 
 export interface Tier {
   id: TierId;
@@ -87,12 +87,12 @@ export const TIERS: Tier[] = [
     order: 7,
   },
   {
-    id: "pack",
-    label: "Pack Seed",
-    description: "Exclusive drops from the Ghost Pepper Pack — roll to obtain.",
-    dotClass: "bg-gradient-to-r from-fuchsia-400 to-pink-400",
-    accentClass: "from-fuchsia-400/15 to-transparent",
-    borderClass: "border-fuchsia-400/30",
+    id: "unknown",
+    label: "Unknown",
+    description: "Tier under community review — Thorn Rose, Glow Mushroom, Horned Melon.",
+    dotClass: "bg-zinc-600",
+    accentClass: "from-zinc-600/15 to-transparent",
+    borderClass: "border-zinc-600/30",
     order: 8,
   },
 ];

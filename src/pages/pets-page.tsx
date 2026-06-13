@@ -1,46 +1,36 @@
 import { useMemo, useState } from "react";
-import { PawPrint, MapPin, Coins, Sparkles, Crown, Hammer, Shield } from "lucide-react";
+import { PawPrint, Coins, MapPin, Tag, Sparkles, Crown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { TIERS } from "@/data/tiers";
-import {
-  PETS,
-  SIZE_STATS,
-  SLOT_LABEL,
-  type Pet,
-  type PetSize,
-  type PetSlot,
-} from "@/data/pets";
+import { PETS, type Pet } from "@/data/pets";
 import { formatNumber } from "@/lib/utils";
-import { cn } from "@/lib/utils";
 import { trackOnce } from "@/lib/use-plausible";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
-type SlotFilter = "all" | PetSlot;
+type TierFilter = "all" | "watchlist" | "mythic" | "legendary" | "rare" | "uncommon" | "common" | "unknown";
 
-const SIZES: { id: PetSize; label: string; tint: string }[] = [
-  { id: "normal", label: "Normal", tint: "text-zinc-400" },
-  { id: "big",    label: "Big",    tint: "text-sky-400" },
-  { id: "huge",   label: "Huge",   tint: "text-emerald-400" },
+const TIER_PRESETS: { id: TierFilter; label: string }[] = [
+  { id: "all",       label: "All" },
+  { id: "common",    label: "Common" },
+  { id: "uncommon",  label: "Uncommon" },
+  { id: "rare",      label: "Rare" },
+  { id: "legendary", label: "Legendary" },
+  { id: "mythic",    label: "Mythic" },
+  { id: "unknown",   label: "Unknown" },
+  { id: "watchlist", label: "Watchlist" },
 ];
 
 export function PetsPage() {
-  const [slotFilter, setSlotFilter] = useState<SlotFilter>("all");
+  const [tierFilter, setTierFilter] = useState<TierFilter>("all");
   const [openSlug, setOpenSlug] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     return PETS.filter((p) => {
-      if (slotFilter !== "all" && p.slot !== slotFilter) return false;
-      return true;
+      if (tierFilter === "all") return true;
+      return p.tier === tierFilter;
     });
-  }, [slotFilter]);
+  }, [tierFilter]);
 
-  // Fire a single Plausible event per distinct slot filter so the
-  // dashboard shows what visitors actually browse.
-  trackOnce(
-    "Pets browse",
-    `pets:${slotFilter}`,
-    { slot: slotFilter }
-  );
+  trackOnce("Pets browse", `pets:${tierFilter}`, { tier: tierFilter });
 
   return (
     <div className="container py-10">
@@ -49,119 +39,48 @@ export function PetsPage() {
           <PawPrint className="h-7 w-7 text-emerald-400" /> Pets
         </h1>
         <p className="mt-2 text-muted-foreground max-w-2xl">
-          {PETS.length} pets across {new Set(PETS.map((p) => p.tier)).size} tiers. Most take 1 active slot; legendary+
-          pets take 2-3. Big and Huge variants cost more but multiply passive power and the
-          payout if you steal them from another player.
+          {PETS.length} pets in the wiki. Most are bought from map spawns for
+          Sheckles. Two (Gnome, Raccoon) are still on the community watchlist
+          with unconfirmed stats.
         </p>
       </div>
 
-      {/* Size legend */}
-      <div className="mb-6 rounded-lg border border-border bg-card/50 p-4">
-        <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
-          Size legend
-        </div>
-        <div className="grid sm:grid-cols-3 gap-3">
-          {SIZES.map((s) => (
-            <div key={s.id} className="flex items-center gap-2 text-sm">
-              <span className={cn("font-semibold", s.tint)}>{s.label}</span>
-              <span className="text-muted-foreground">
-                power ×{SIZE_STATS[s.id].powerMultiplier}, price ×{SIZE_STATS[s.id].priceMultiplier}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
       <Tabs
-        value={slotFilter}
-        onValueChange={(v) => setSlotFilter(v as SlotFilter)}
+        value={tierFilter}
+        onValueChange={(v) => setTierFilter(v as TierFilter)}
         className="mb-6"
       >
         <TabsList>
-          <TabsTrigger value="all">All slots</TabsTrigger>
-          <TabsTrigger value="garden">{SLOT_LABEL.garden}</TabsTrigger>
-          <TabsTrigger value="combat">{SLOT_LABEL.combat}</TabsTrigger>
-          <TabsTrigger value="utility">{SLOT_LABEL.utility}</TabsTrigger>
+          {TIER_PRESETS.map((t) => (
+            <TabsTrigger key={t.id} value={t.id}>
+              {t.label}
+            </TabsTrigger>
+          ))}
         </TabsList>
-        <TabsContent value={slotFilter} />
+        <TabsContent value={tierFilter} />
       </Tabs>
 
-      <div className="space-y-6">
-        {TIERS.map((tier) => {
-          const tierPets = filtered.filter((p) => p.tier === tier.id);
-          if (tierPets.length === 0) return null;
-          return (
-            <PetTierSection
-              key={tier.id}
-              tier={tier}
-              pets={tierPets}
-              openSlug={openSlug}
-              setOpenSlug={setOpenSlug}
-            />
-          );
-        })}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {filtered.map((pet) => (
+          <PetCard
+            key={pet.slug}
+            pet={pet}
+            isOpen={openSlug === pet.slug}
+            onToggle={() => setOpenSlug(openSlug === pet.slug ? null : pet.slug)}
+          />
+        ))}
       </div>
+
+      {filtered.length === 0 && (
+        <div className="rounded-xl border border-dashed border-border bg-card/40 p-10 text-center">
+          <div className="text-3xl mb-2">🐾</div>
+          <h3 className="font-semibold">No pets match that filter</h3>
+          <p className="text-sm text-muted-foreground mt-1">
+            Try a different tier.
+          </p>
+        </div>
+      )}
     </div>
-  );
-}
-
-function PetTierSection({
-  tier,
-  pets,
-  openSlug,
-  setOpenSlug,
-}: {
-  tier: (typeof TIERS)[number];
-  pets: Pet[];
-  openSlug: string | null;
-  setOpenSlug: (s: string | null) => void;
-}) {
-  const [open, setOpen] = useState(true);
-  return (
-    <section
-      id={`tier-${tier.id}`}
-      className={cn(
-        "rounded-2xl border border-border/60 bg-card/40 overflow-hidden",
-        "bg-gradient-to-br",
-        tier.accentClass
-      )}
-    >
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="w-full px-5 py-4 flex items-center justify-between gap-4 hover:bg-secondary/30 transition-colors"
-      >
-        <div className="flex items-center gap-3">
-          <span className={cn("h-3 w-3 rounded-full", tier.dotClass)} />
-          <div className="text-left">
-            <h2 className="text-lg font-semibold flex items-center gap-2">
-              {tier.label}
-              <span className="text-xs text-muted-foreground font-normal">
-                · {pets.length} pet{pets.length === 1 ? "" : "s"}
-              </span>
-            </h2>
-            <p className="text-xs text-muted-foreground hidden sm:block">
-              {tier.description}
-            </p>
-          </div>
-        </div>
-      </button>
-
-      {open && (
-        <div className="px-5 pb-5 animate-fade-in">
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {pets.map((pet) => (
-              <PetCard
-                key={pet.slug}
-                pet={pet}
-                isOpen={openSlug === pet.slug}
-                onToggle={() => setOpenSlug(openSlug === pet.slug ? null : pet.slug)}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-    </section>
   );
 }
 
@@ -174,7 +93,8 @@ function PetCard({
   isOpen: boolean;
   onToggle: () => void;
 }) {
-  const stats = SIZE_STATS.normal;
+  const isPending = pet.basePrice === null;
+  const isWatchlist = pet.tier === "watchlist";
   return (
     <Card className="h-full transition-all hover:border-emerald-400/40">
       <button
@@ -191,11 +111,11 @@ function PetCard({
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="font-semibold text-base">{pet.name}</h3>
               <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                {SLOT_LABEL[pet.slot]}
+                {pet.tier}
               </span>
             </div>
             <p className="text-xs text-emerald-400 font-medium mt-0.5">
-              {pet.passive}
+              {pet.ability}
             </p>
           </div>
         </div>
@@ -204,29 +124,25 @@ function PetCard({
           {pet.blurb}
         </p>
 
-        <div className="grid grid-cols-3 gap-2 text-[10px] text-muted-foreground border-t border-border/40 pt-2">
-          <Stat icon={<Coins className="h-3 w-3" />} label="Normal" value={`${formatNumber(pet.basePrice)} ¢`} />
-          <Stat icon={<Sparkles className="h-3 w-3" />} label="Big" value={`${formatNumber(Math.round(pet.basePrice * SIZE_STATS.big.priceMultiplier))} ¢`} />
-          <Stat icon={<Crown className="h-3 w-3" />} label="Huge" value={`${formatNumber(Math.round(pet.basePrice * SIZE_STATS.huge.priceMultiplier))} ¢`} />
+        <div className="grid grid-cols-2 gap-2 text-[10px] text-muted-foreground border-t border-border/40 pt-2">
+          <Stat
+            icon={<Coins className="h-3 w-3" />}
+            label="Price"
+            value={pet.basePrice !== null ? `${formatNumber(pet.basePrice)} ¢` : "TBD"}
+          />
+          <Stat
+            icon={isWatchlist ? <Sparkles className="h-3 w-3" /> : <Crown className="h-3 w-3" />}
+            label={isWatchlist ? "Status" : "Obtainment"}
+            value={isPending ? "Pending" : isWatchlist ? "Watchlist" : "Map spawn"}
+          />
         </div>
       </button>
 
       {isOpen && (
         <CardContent className="pt-0 pb-4 px-4">
           <div className="border-t border-border/40 pt-3 space-y-2 text-xs">
-            <Row icon={<MapPin className="h-3 w-3" />} label="Spawn" value={pet.spawnHint} />
-            <Row icon={<Hammer className="h-3 w-3" />} label="Slot cost" value={`${pet.slotCost} active`} />
-            <Row icon={<Shield className="h-3 w-3" />} label="Steal ×" value={`N:${stats.stealMultiplier} · B:${SIZE_STATS.big.stealMultiplier} · H:${SIZE_STATS.huge.stealMultiplier}`} />
-            <div className="flex flex-wrap gap-1 pt-1">
-              {pet.tags.map((t) => (
-                <span
-                  key={t}
-                  className="inline-flex items-center rounded-full border border-border bg-background/40 px-2 py-0.5 text-[10px] text-muted-foreground"
-                >
-                  #{t}
-                </span>
-              ))}
-            </div>
+            <Row icon={<MapPin className="h-3 w-3" />} label="Source" value="growagarden2wiki.com" />
+            <Row icon={<Tag className="h-3 w-3" />} label="Tags" value={pet.tags.map((t) => `#${t}`).join("  ")} />
           </div>
         </CardContent>
       )}

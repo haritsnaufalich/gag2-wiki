@@ -73,10 +73,10 @@ export function CropDetailPage() {
                         Code: {crop.code}
                       </div>
                     )}
-                    {crop.obtainment === "pack" && (
+                    {crop.obtainment === "unknown" && (
                       <div className="inline-flex items-center gap-1.5 rounded-md bg-fuchsia-400/10 border border-fuchsia-400/20 px-2.5 py-1 text-xs font-medium text-fuchsia-400">
                         <Package className="h-3 w-3" />
-                        Ghost Pepper Pack drop
+                        the wiki drop
                       </div>
                     )}
                     <div className="inline-flex items-center gap-1.5 rounded-md bg-secondary border border-border px-2.5 py-1 text-xs text-muted-foreground">

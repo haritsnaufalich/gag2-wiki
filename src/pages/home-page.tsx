@@ -16,7 +16,7 @@ const QUICK_FEATURES = [
 
 export function HomePage() {
   const featured = CROPS.filter((c) => c.tier === "legendary").slice(0, 4);
-  const packSeeds = CROPS.filter((c) => c.tier === "pack").slice(0, 5);
+  const packSeeds = CROPS.filter((c) => c.tier === "unknown").slice(0, 5);
 
   return (
     <div className="bg-emerald-ambient">
@@ -103,12 +103,12 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Pack seeds strip */}
+      {/* Unknown seeds strip */}
       <section className="container pb-10">
         <div className="flex items-end justify-between gap-4 mb-4">
           <div>
             <h2 className="text-2xl font-semibold tracking-tight">
-              Ghost Pepper Pack drops
+              the wiki drops
             </h2>
             <p className="text-sm text-muted-foreground mt-1">
               Pack-exclusive seeds with no shop listing. Roll to obtain.
