@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import {
-  createHashRouter,
+  createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
 import { SiteLayout } from "@/components/layout/site-layout";
@@ -60,7 +60,7 @@ const wrap = (node: React.ReactNode) => (
   <Suspense fallback={<PageSkeleton />}>{node}</Suspense>
 );
 
-const router = createHashRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <SiteLayout />,

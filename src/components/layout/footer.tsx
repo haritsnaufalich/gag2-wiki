@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Sprout, Github, Heart } from "lucide-react";
 import { WIKI_STATS } from "@/data";
 
@@ -22,11 +23,11 @@ export function Footer() {
         <div>
           <div className="font-semibold mb-3">Browse</div>
           <ul className="space-y-2 text-muted-foreground">
-            <li><a href="#/crops" className="hover:text-foreground">Crops</a></li>
-            <li><a href="#/mutations" className="hover:text-foreground">Mutations</a></li>
-            <li><a href="#/calculator" className="hover:text-foreground">Calculator</a></li>
-            <li><a href="#/compare" className="hover:text-foreground">Compare</a></li>
-            <li><a href="#/systems" className="hover:text-foreground">Systems</a></li>
+            <li><Link to="/crops" className="hover:text-foreground">Crops</Link></li>
+            <li><Link to="/mutations" className="hover:text-foreground">Mutations</Link></li>
+            <li><Link to="/calculator" className="hover:text-foreground">Calculator</Link></li>
+            <li><Link to="/compare" className="hover:text-foreground">Compare</Link></li>
+            <li><Link to="/systems" className="hover:text-foreground">Systems</Link></li>
           </ul>
         </div>
 
