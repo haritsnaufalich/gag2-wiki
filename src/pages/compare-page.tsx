@@ -202,10 +202,13 @@ function StatBlock({
 }
 
 function MutationCeiling({ crop, accent }: { crop: typeof aDefault; accent: string }) {
-  const totalMultiplier = MUTATIONS.reduce(
-    (acc, m) => acc * (m.multiplier ?? 1),
-    1
+  // Beebom: mutations don't stack. The ceiling is the strongest single
+  // known multiplier applied to the base value.
+  const knownMultipliers = MUTATIONS.map((m) => m.multiplier).filter(
+    (v): v is number => typeof v === "number"
   );
+  const totalMultiplier =
+    knownMultipliers.length > 0 ? Math.max(...knownMultipliers) : 1;
   const ceiling = crop.baseValue * totalMultiplier;
   return (
     <div className="rounded-lg border border-border/60 bg-background/40 p-4">
@@ -214,7 +217,7 @@ function MutationCeiling({ crop, accent }: { crop: typeof aDefault; accent: stri
         {formatNumber(ceiling)} ¢
       </div>
       <div className="text-[10px] text-muted-foreground mt-1">
-        base × {totalMultiplier.toLocaleString()} (all 5 mutations)
+        base × {totalMultiplier.toLocaleString()} (strongest single mutation)
       </div>
     </div>
   );

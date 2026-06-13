@@ -21,8 +21,10 @@ export function CalculatorPage() {
 
   const { effective, multiplier, activatedMutations } = useMemo(() => {
     const activated = MUTATIONS.filter((m) => active.has(m.slug));
+    // Beebom: mutations don't stack. The strongest active multiplier wins.
     const mult = activated.reduce(
-      (acc, m) => acc * (m.multiplier ?? 1),
+      (best, m) =>
+        typeof m.multiplier === "number" ? Math.max(best, m.multiplier) : best,
       1
     );
     const boostMult = 1 + friendBoostPct / 100;
