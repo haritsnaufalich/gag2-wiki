@@ -3,6 +3,7 @@ import { ArrowLeft, Clock, Repeat, Coins, Sparkles, Tag, Beaker, Ticket, Package
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { TierBadge } from "@/components/crops/tier-badge";
+import { ValueCurveChart } from "@/components/crops/value-curve-chart";
 import { TIER_MAP, getCropBySlug, MUTATIONS, CROPS } from "@/data";
 import { obtainmentLabel } from "@/data/crops";
 import { formatNumber, formatGrowTime } from "@/lib/utils";
@@ -166,6 +167,13 @@ export function CropDetailPage() {
               </div>
             </CardContent>
           </Card>
+
+          {crop.valueCurve && (
+            <ValueCurveChart
+              curve={crop.valueCurve}
+              observations={crop.valueObservations}
+            />
+          )}
         </div>
 
         <aside className="space-y-4">
