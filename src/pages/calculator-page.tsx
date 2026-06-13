@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/utils";
 import { cn } from "@/lib/utils";
-import { Sparkles, Calculator as CalcIcon, X, Timer, TrendingUp } from "lucide-react";
+import { Sparkles, Calculator as CalcIcon, X, Timer, TrendingUp, User } from "lucide-react";
 import { TIER_MAP } from "@/data/tiers";
 import { TierBadge } from "@/components/crops/tier-badge";
 import { trackOnce } from "@/lib/use-plausible";
@@ -14,7 +14,10 @@ export function CalculatorPage() {
   const [cropSlug, setCropSlug] = useState(CROPS[12].slug);
   const [quantity, setQuantity] = useState(1);
   const [weightG, setWeightG] = useState<number>(1);
-  const [friendBoostPct, setFriendBoostPct] = useState<number>(0);
+  const [friendCount, setFriendCount] = useState<number>(0);
+  // Canonical: each friend in the same server grants +10% Sheckle boost,
+  // capped at 4 friends (+40% max).
+  const friendBoostPct = friendCount * 10;
   const [active, setActive] = useState<Set<string>>(new Set());
 
   const crop = CROPS.find((c) => c.slug === cropSlug) ?? CROPS[0];
@@ -55,22 +58,23 @@ export function CalculatorPage() {
     };
   }, [crop, quantity, weightG, friendBoostPct, active]);
 
-  // Fire one Plausible event per distinct (crop, mutations, qty, weight, boost) combo
+  // Fire one Plausible event per distinct (crop, mutations, qty, weight, friends) combo
   // — repeated clicks on the same setup don't spam the dashboard.
   useEffect(() => {
     trackOnce(
       "Calculator use",
-      `calc:${crop.slug}:${quantity}:${weightG}:${friendBoostPct}:${[...active].sort().join(",")}`,
+      `calc:${crop.slug}:${quantity}:${weightG}:${friendCount}:${[...active].sort().join(",")}`,
       {
         crop: crop.slug,
         quantity,
         weight: weightG,
-        friendBoost: friendBoostPct,
+        friends: friendCount,
+        friendBoostPct,
         mutations: active.size,
         tier: crop.tier,
       }
     );
-  }, [crop.slug, quantity, weightG, friendBoostPct, active, crop.tier]);
+  }, [crop.slug, quantity, weightG, friendCount, friendBoostPct, active, crop.tier]);
 
   const shecklesPerHour =
     crop.growTimeSec && crop.growTimeSec != null && crop.growTimeSec > 0
@@ -169,21 +173,42 @@ export function CalculatorPage() {
 
             <div>
               <label className="text-xs uppercase tracking-wider text-muted-foreground flex items-center justify-between">
-                <span>Friend boost</span>
+                <span>Friends in server</span>
                 <span className="text-emerald-400 normal-case tracking-normal text-[10px]">
                   +{friendBoostPct}%
                 </span>
               </label>
-              <input
-                type="range"
-                min={0}
-                max={100}
-                step={5}
-                value={friendBoostPct}
-                onChange={(e) => setFriendBoostPct(Number(e.target.value))}
-                className="mt-3 w-full accent-emerald-500"
-                aria-label="Friend boost percent"
-              />
+              <div
+                className="mt-3 grid grid-cols-4 gap-2"
+                role="group"
+                aria-label="Friends in server (each +10% boost, max 4)"
+              >
+                {[1, 2, 3, 4].map((n) => {
+                  const isActive = friendCount === n;
+                  return (
+                    <button
+                      key={n}
+                      type="button"
+                      onClick={() => setFriendCount(isActive ? 0 : n)}
+                      aria-pressed={isActive}
+                      aria-label={`${n} friend${n === 1 ? "" : "s"}`}
+                      className={cn(
+                        "flex flex-col items-center justify-center gap-1 rounded-lg border p-3 text-xs transition-colors",
+                        isActive
+                          ? "border-emerald-400/50 bg-emerald-400/10 text-emerald-300"
+                          : "border-border bg-background/40 text-muted-foreground hover:border-emerald-400/30 hover:text-foreground"
+                      )}
+                    >
+                      <User className="h-4 w-4" />
+                      <span className="font-medium">{n}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-2">
+                Each friend grants +10% Sheckle boost, capped at 4 friends
+                (+40% max). Click the active friend to clear.
+              </p>
             </div>
 
             <div className="pt-3 border-t border-border/40 space-y-1.5 text-xs">
