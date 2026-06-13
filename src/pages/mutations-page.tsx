@@ -11,9 +11,6 @@ const KIND_META: Record<MutationKind, { label: string; tint: string; icon: typeo
 export function MutationsPage() {
   const variants = MUTATIONS.filter((m) => m.kind === "variant");
   const mutations = MUTATIONS.filter((m) => m.kind === "mutation");
-  const allMultipliers = MUTATIONS.map((m) => m.multiplier).filter(
-    (v): v is number => typeof v === "number"
-  );
 
   return (
     <div className="container py-10">
@@ -22,41 +19,11 @@ export function MutationsPage() {
           <Sparkles className="h-7 w-7 text-emerald-400" /> Mutations
         </h1>
         <p className="mt-2 text-muted-foreground max-w-2xl">
-          Variants and mutations stack multiplicatively. Order doesn't matter
-          — only the product.
+          Each mutation applies a single-multiplier boost. Beebom's testing
+          notes that mutations don't stack — only the strongest active one
+          matters at harvest.
         </p>
       </div>
-
-      {/* Stack preview */}
-      <Card className="mb-8 overflow-hidden">
-        <CardContent className="p-5 flex flex-wrap items-center gap-4">
-          <div className="text-xs text-muted-foreground uppercase tracking-wider">
-            Stack all
-          </div>
-          <div className="flex items-center gap-1 flex-wrap">
-            {MUTATIONS.map((m) => (
-              <span
-                key={m.slug}
-                className="inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-1 text-xs"
-              >
-                <span>{m.emoji}</span>
-                <span className="font-medium">{m.name}</span>
-                <span className="text-muted-foreground">
-                  {m.multiplier != null ? `×${m.multiplier}` : "TBA"}
-                </span>
-              </span>
-            ))}
-          </div>
-          <div className="ml-auto text-right">
-            <div className="text-xs text-muted-foreground uppercase tracking-wider">
-              Combined
-            </div>
-            <div className="text-2xl font-bold text-emerald-400">
-              ×{allMultipliers.reduce((a, b) => a * b, 1).toLocaleString()}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
       <Section
         title="Variants"
