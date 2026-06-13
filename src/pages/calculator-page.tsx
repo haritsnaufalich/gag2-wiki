@@ -21,12 +21,19 @@ export function CalculatorPage() {
 
   const { effective, multiplier, activatedMutations } = useMemo(() => {
     const activated = MUTATIONS.filter((m) => active.has(m.slug));
-    // Beebom: mutations don't stack. The strongest active multiplier wins.
-    const mult = activated.reduce(
-      (best, m) =>
-        typeof m.multiplier === "number" ? Math.max(best, m.multiplier) : best,
-      1
-    );
+    // Canonical formula: variant × (1 + Σ weather). Strongest variant wins;
+    // weather mutations stack additively.
+    const variantMult = activated
+      .filter((m) => m.kind === "variant")
+      .reduce(
+        (best, m) =>
+          typeof m.multiplier === "number" ? Math.max(best, m.multiplier) : best,
+        1
+      );
+    const weatherMult = activated
+      .filter((m) => m.kind === "mutation")
+      .reduce((sum, m) => sum + (m.multiplier ?? 0), 0);
+    const mult = variantMult * (1 + weatherMult);
     const boostMult = 1 + friendBoostPct / 100;
     // Per-weight value: average value per gram, then scaled by chosen weight.
     const baseValueAtWeight =

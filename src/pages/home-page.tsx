@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Sprout, Sparkles, Calculator, Layers, Settings2, GitCompare, Gift } from "lucide-react";
+import { ArrowRight, Sprout, Sparkles, Calculator, Layers, Settings2, GitCompare, Gift, Wrench, Egg, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CROPS, TIERS, WIKI_STATS } from "@/data";
@@ -10,6 +10,9 @@ const QUICK_FEATURES = [
   { icon: Sparkles, title: "Mutations", desc: "Gold, Rainbow, Electric…", href: "/mutations" },
   { icon: Calculator, title: "Value Calculator", desc: "Stack mutations, see totals.", href: "/calculator" },
   { icon: GitCompare, title: "Compare", desc: "Side-by-side ROI breakdown.", href: "/compare" },
+  { icon: Wrench, title: "Gears", desc: "Sprinklers, tools, mushrooms.", href: "/gears" },
+  { icon: Egg, title: "Eggs", desc: "Hatchable pet eggs.", href: "/eggs" },
+  { icon: Package, title: "Seed Packs", desc: "Robux bundles with rarity odds.", href: "/seed-packs" },
   { icon: Layers, title: "Tier Progression", desc: "Common → Super → Pack drops.", href: "/crops" },
   { icon: Settings2, title: "Game Systems", desc: "Time, economy, stealing rules.", href: "/systems" },
 ];
@@ -39,8 +42,9 @@ export function HomePage() {
           </h1>
           <p className="mt-5 text-lg text-muted-foreground max-w-2xl text-balance">
             {WIKI_STATS.totalCrops} crops across {WIKI_STATS.totalTiers} tiers,{" "}
-            {WIKI_STATS.totalMutations} mutations, plus calculators and
-            comparison tools that actually respect the math.
+            {WIKI_STATS.totalMutations} mutations, {WIKI_STATS.totalGears} gears,{" "}
+            {WIKI_STATS.totalEggs} egg types, {WIKI_STATS.totalSeedPacks} seed
+            packs — plus calculators and comparison tools that respect the math.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -54,10 +58,13 @@ export function HomePage() {
             </Button>
           </div>
 
-          <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
+          <div className="mt-10 grid grid-cols-3 sm:grid-cols-7 gap-3 max-w-3xl">
             <Stat label="Crops" value={WIKI_STATS.totalCrops.toString()} />
             <Stat label="Tiers" value={WIKI_STATS.totalTiers.toString()} />
             <Stat label="Mutations" value={WIKI_STATS.totalMutations.toString()} />
+            <Stat label="Gears" value={WIKI_STATS.totalGears.toString()} />
+            <Stat label="Eggs" value={WIKI_STATS.totalEggs.toString()} />
+            <Stat label="Packs" value={WIKI_STATS.totalSeedPacks.toString()} />
             <Stat label="Systems" value={WIKI_STATS.totalSystems.toString()} />
           </div>
         </div>

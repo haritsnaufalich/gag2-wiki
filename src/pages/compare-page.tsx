@@ -202,13 +202,20 @@ function StatBlock({
 }
 
 function MutationCeiling({ crop, accent }: { crop: typeof aDefault; accent: string }) {
-  // Beebom: mutations don't stack. The ceiling is the strongest single
-  // known multiplier applied to the base value.
-  const knownMultipliers = MUTATIONS.map((m) => m.multiplier).filter(
-    (v): v is number => typeof v === "number"
+  // Canonical formula: strongest variant × (1 + Σ weather mutations).
+  // Variants don't stack with each other; weather mutations stack
+  // additively into the "mutation stack".
+  const variants = MUTATIONS.filter((m) => m.kind === "variant");
+  const weathers = MUTATIONS.filter((m) => m.kind === "mutation");
+  const variantMult = Math.max(
+    1,
+    ...variants.map((m) => m.multiplier ?? 0).filter((v) => v > 0)
   );
-  const totalMultiplier =
-    knownMultipliers.length > 0 ? Math.max(...knownMultipliers) : 1;
+  const weatherMult = weathers
+    .map((m) => m.multiplier ?? 0)
+    .filter((v) => v > 0)
+    .reduce((a, b) => a + b, 0);
+  const totalMultiplier = variantMult * (1 + weatherMult);
   const ceiling = crop.baseValue * totalMultiplier;
   return (
     <div className="rounded-lg border border-border/60 bg-background/40 p-4">
@@ -217,7 +224,7 @@ function MutationCeiling({ crop, accent }: { crop: typeof aDefault; accent: stri
         {formatNumber(ceiling)} ¢
       </div>
       <div className="text-[10px] text-muted-foreground mt-1">
-        base × {totalMultiplier.toLocaleString()} (strongest single mutation)
+        base × {totalMultiplier.toLocaleString()} (variant × (1 + weather))
       </div>
     </div>
   );

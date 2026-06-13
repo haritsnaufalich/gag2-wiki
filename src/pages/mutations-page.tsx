@@ -11,6 +11,18 @@ const KIND_META: Record<MutationKind, { label: string; tint: string; icon: typeo
 export function MutationsPage() {
   const variants = MUTATIONS.filter((m) => m.kind === "variant");
   const mutations = MUTATIONS.filter((m) => m.kind === "mutation");
+  // Canonical formula: variant × (1 + Σ weather mutations). Variants are
+  // the "base layer" — pick the strongest. Weather mutations stack
+  // additively into the stack.
+  const variantMult = Math.max(
+    1,
+    ...variants.map((m) => m.multiplier ?? 0).filter((v) => v > 0)
+  );
+  const weatherMult = MUTATIONS.filter((m) => m.kind === "mutation")
+    .map((m) => m.multiplier ?? 0)
+    .filter((v) => v > 0)
+    .reduce((a, b) => a + b, 0);
+  const allMultipliers = variantMult * (1 + weatherMult);
 
   return (
     <div className="container py-10">
@@ -19,11 +31,45 @@ export function MutationsPage() {
           <Sparkles className="h-7 w-7 text-emerald-400" /> Mutations
         </h1>
         <p className="mt-2 text-muted-foreground max-w-2xl">
-          Each mutation applies a single-multiplier boost. Beebom's testing
-          notes that mutations don't stack — only the strongest active one
-          matters at harvest.
+          Variants form the base layer (strongest wins); weather mutations
+          stack additively into it. The combined formula is{" "}
+          <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">
+            variant × (1 + Σ weather)
+          </code>
+          .
         </p>
       </div>
+
+      {/* Stack preview */}
+      <Card className="mb-8 overflow-hidden">
+        <CardContent className="p-5 flex flex-wrap items-center gap-4">
+          <div className="text-xs text-muted-foreground uppercase tracking-wider">
+            Stack all
+          </div>
+          <div className="flex items-center gap-1 flex-wrap">
+            {MUTATIONS.map((m) => (
+              <span
+                key={m.slug}
+                className="inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-1 text-xs"
+              >
+                <span>{m.emoji}</span>
+                <span className="font-medium">{m.name}</span>
+                <span className="text-muted-foreground">
+                  {m.multiplier != null ? `×${m.multiplier}` : "TBA"}
+                </span>
+              </span>
+            ))}
+          </div>
+          <div className="ml-auto text-right">
+            <div className="text-xs text-muted-foreground uppercase tracking-wider">
+              Combined
+            </div>
+            <div className="text-2xl font-bold text-emerald-400">
+              ×{allMultipliers.toLocaleString()}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <Section
         title="Variants"
