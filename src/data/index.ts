@@ -1,6 +1,7 @@
 export * from "./tiers";
 export * from "./crops";
 export * from "./mutations";
+export * from "./pets";
 export * from "./systems";
 
 export const WIKI_STATS = {

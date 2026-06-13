@@ -7,6 +7,7 @@ import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 const NAV = [
   { to: "/", label: "Home", end: true },
   { to: "/crops", label: "Crops" },
+  { to: "/pets", label: "Pets" },
   { to: "/mutations", label: "Mutations" },
   { to: "/calculator", label: "Calculator" },
   { to: "/compare", label: "Compare" },

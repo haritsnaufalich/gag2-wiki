@@ -10,6 +10,7 @@ import { MutationsPage } from "@/pages/mutations-page";
 import { CalculatorPage } from "@/pages/calculator-page";
 import { SystemsPage } from "@/pages/systems-page";
 import { ComparePage } from "@/pages/compare-page";
+import { PetsPage } from "@/pages/pets-page";
 import { NotFoundPage } from "@/pages/not-found-page";
 
 const router = createHashRouter([
@@ -20,6 +21,7 @@ const router = createHashRouter([
       { index: true, element: <HomePage /> },
       { path: "crops", element: <CropsPage /> },
       { path: "crops/:slug", element: <CropDetailPage /> },
+      { path: "pets", element: <PetsPage /> },
       { path: "mutations", element: <MutationsPage /> },
       { path: "calculator", element: <CalculatorPage /> },
       { path: "compare", element: <ComparePage /> },
