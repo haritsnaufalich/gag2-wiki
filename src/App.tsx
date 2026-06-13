@@ -11,6 +11,7 @@ import { CalculatorPage } from "@/pages/calculator-page";
 import { SystemsPage } from "@/pages/systems-page";
 import { ComparePage } from "@/pages/compare-page";
 import { NotFoundPage } from "@/pages/not-found-page";
+import { usePlausible } from "@/lib/use-plausible";
 
 const router = createHashRouter([
   {
@@ -29,6 +30,12 @@ const router = createHashRouter([
   },
 ]);
 
-export function App() {
+function RouterWithTracking() {
+  // Fires a Plausible `pageview` on every hash-route change.
+  usePlausible();
   return <RouterProvider router={router} />;
+}
+
+export function App() {
+  return <RouterWithTracking />;
 }
