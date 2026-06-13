@@ -60,28 +60,28 @@
       "name": "Crops",
       "short_name": "Crops",
       "description": "Browse all 30 crops across 8 tiers",
-      "url": "./#/crops",
+      "url": "./crops",
       "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Pets",
       "short_name": "Pets",
-      "description": "Browse all pets by tier, slot, and size",
-      "url": "./#/pets",
+      "description": "Browse all 12 pets by tier, slot, and ability",
+      "url": "./pets",
       "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Calculator",
       "short_name": "Calc",
       "description": "Stack mutations and compute Sheckle value",
-      "url": "./#/calculator",
+      "url": "./calculator",
       "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Compare",
       "short_name": "Compare",
       "description": "Side-by-side crop comparison with ROI",
-      "url": "./#/compare",
+      "url": "./compare",
       "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     }
   ],

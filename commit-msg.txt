@@ -1,25 +1,55 @@
-sitemap.xml: refresh for current SPA state
+Favicon + og:image refresh for social sharing
 
-The old sitemap (from Phase 2) was stale:
-- Used the old hash format (#/crops) — broken since the browser-router
-  migration in Phase 14
-- Missing all the routes added in Phase 12 (pets was already there,
-  but gears, eggs, seed-packs, mutations were not)
-- Missing per-crop detail URLs
-- No <lastmod> fields
+Inspect state on entry:
+- favicon.svg existed (clean sprout on dark with emerald stroke) — kept
+- og-image.svg had great design but stale text ("5 mutations") —
+  was from Phase 2, before Starstruck + Bloodlit were added in Phase 11
+- og-image.png was rasterized from the stale SVG (still 1200x630
+  but shows the wrong mutation count)
+- manifest.webmanifest PWA shortcuts still used the obsolete
+  hash-router format (#/crops, #/pets, #/calculator, #/compare)
 
-Generated a fresh public/sitemap.xml with:
-- 10 top-level routes (home + 9 category pages) in priority order
-- 30 per-crop detail URLs (slug list parsed from src/data/crops.ts)
-- <lastmod>2026-06-13</lastmod> on every entry
-- <changefreq> and <priority> per page type (home=daily/1.0,
-  crops=daily/0.9, calculator/compare=weekly/0.9, etc.)
+Changes:
 
-Total: 40 URLs.
+public/og-image.svg
+  Stats updated to current state (Phase 12 final):
+  - "5 mutations" -> "6 mutations"
+  - added a second subtitle line: "+ 27 gears · 3 eggs · 4 seed
+    packs · 12 pets" so the new categories from Phase 12 are
+    represented in the share preview
 
-Public/ robots.txt was already correct from Phase 2 (allows all,
-points to sitemap). Left as-is.
+public/og-image.png
+  Regenerated from the updated SVG using sharp (now a devDep).
+  Output: 1200x630, 114,320 bytes. density 144 to keep text crisp,
+  compression level 9 for the smallest possible file.
 
-If a future commit adds a new route or crop, the sitemap needs
-to be regenerated. A Vite plugin could automate this from the
-data files, but a static file is fine for the current scale (40 URLs).
+public/manifest.webmanifest
+  PWA shortcut URLs: "#/crops" -> "./crops" (and same for pets,
+  calculator, compare). The browser-router switch in Phase 14
+  broke these for any user with the PWA installed.
+  Pet description updated to "all 12 pets" (Phase 12b).
+
+public/favicon.svg
+  Left as-is. 577 bytes, simple sprout, renders at 16x16 in
+  modern browsers. Good enough.
+
+scripts/regen-og-image.cjs (new)
+  One-off Node script that reads public/og-image.svg and writes
+  public/og-image.png. Run with `node scripts/regen-og-image.cjs`
+  after editing the SVG. Kept in the repo (not gitignored) so
+  future contributors can regenerate the PNG.
+
+devDependency added: sharp
+  Required for SVG -> PNG. Adds ~30 MB to node_modules. Kept
+  in devDeps (not bundled) so it doesn't bloat the production
+  build. Worth it for the og-image regen.
+
+Meta tags (index.html)
+  Already comprehensive (og:image:width/height/alt, twitter
+  card=summary_large_image). No changes needed.
+
+Future maintenance:
+- Edit og-image.svg for any visual change to the share preview
+- Run `node scripts/regen-og-image.cjs` to regenerate the PNG
+- Sharp is a devDep so it ships with the project; can be removed
+  if the OG image becomes stable and the regen script is unused
