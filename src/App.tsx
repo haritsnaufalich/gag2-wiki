@@ -1,38 +1,82 @@
+import { lazy, Suspense } from "react";
 import {
   createHashRouter,
   RouterProvider,
 } from "react-router-dom";
 import { SiteLayout } from "@/components/layout/site-layout";
-import { HomePage } from "@/pages/home-page";
-import { CropsPage } from "@/pages/crops-page";
-import { CropDetailPage } from "@/pages/crop-detail-page";
-import { MutationsPage } from "@/pages/mutations-page";
-import { CalculatorPage } from "@/pages/calculator-page";
-import { SystemsPage } from "@/pages/systems-page";
-import { ComparePage } from "@/pages/compare-page";
-import { PetsPage } from "@/pages/pets-page";
-import { GearsPage } from "@/pages/gears-page";
-import { EggsPage } from "@/pages/eggs-page";
-import { SeedPacksPage } from "@/pages/seed-packs-page";
-import { NotFoundPage } from "@/pages/not-found-page";
+import { PageSkeleton } from "@/components/layout/page-skeleton";
+
+// Per-route lazy load: each page becomes its own chunk so the initial
+// bundle only ships the layout + route shell. Pages are named exports,
+// so we shim the resolved module into a default export for React.lazy.
+const HomePage = lazy(() =>
+  import("@/pages/home-page").then((m) => ({ default: m.HomePage }))
+);
+const CropsPage = lazy(() =>
+  import("@/pages/crops-page").then((m) => ({ default: m.CropsPage }))
+);
+const CropDetailPage = lazy(() =>
+  import("@/pages/crop-detail-page").then((m) => ({
+    default: m.CropDetailPage,
+  }))
+);
+const PetsPage = lazy(() =>
+  import("@/pages/pets-page").then((m) => ({ default: m.PetsPage }))
+);
+const GearsPage = lazy(() =>
+  import("@/pages/gears-page").then((m) => ({ default: m.GearsPage }))
+);
+const EggsPage = lazy(() =>
+  import("@/pages/eggs-page").then((m) => ({ default: m.EggsPage }))
+);
+const SeedPacksPage = lazy(() =>
+  import("@/pages/seed-packs-page").then((m) => ({
+    default: m.SeedPacksPage,
+  }))
+);
+const MutationsPage = lazy(() =>
+  import("@/pages/mutations-page").then((m) => ({
+    default: m.MutationsPage,
+  }))
+);
+const CalculatorPage = lazy(() =>
+  import("@/pages/calculator-page").then((m) => ({
+    default: m.CalculatorPage,
+  }))
+);
+const ComparePage = lazy(() =>
+  import("@/pages/compare-page").then((m) => ({ default: m.ComparePage }))
+);
+const SystemsPage = lazy(() =>
+  import("@/pages/systems-page").then((m) => ({ default: m.SystemsPage }))
+);
+const NotFoundPage = lazy(() =>
+  import("@/pages/not-found-page").then((m) => ({
+    default: m.NotFoundPage,
+  }))
+);
+
+const wrap = (node: React.ReactNode) => (
+  <Suspense fallback={<PageSkeleton />}>{node}</Suspense>
+);
 
 const router = createHashRouter([
   {
     path: "/",
     element: <SiteLayout />,
     children: [
-      { index: true, element: <HomePage /> },
-      { path: "crops", element: <CropsPage /> },
-      { path: "crops/:slug", element: <CropDetailPage /> },
-      { path: "pets", element: <PetsPage /> },
-      { path: "gears", element: <GearsPage /> },
-      { path: "eggs", element: <EggsPage /> },
-      { path: "seed-packs", element: <SeedPacksPage /> },
-      { path: "mutations", element: <MutationsPage /> },
-      { path: "calculator", element: <CalculatorPage /> },
-      { path: "compare", element: <ComparePage /> },
-      { path: "systems", element: <SystemsPage /> },
-      { path: "*", element: <NotFoundPage /> },
+      { index: true, element: wrap(<HomePage />) },
+      { path: "crops", element: wrap(<CropsPage />) },
+      { path: "crops/:slug", element: wrap(<CropDetailPage />) },
+      { path: "pets", element: wrap(<PetsPage />) },
+      { path: "gears", element: wrap(<GearsPage />) },
+      { path: "eggs", element: wrap(<EggsPage />) },
+      { path: "seed-packs", element: wrap(<SeedPacksPage />) },
+      { path: "mutations", element: wrap(<MutationsPage />) },
+      { path: "calculator", element: wrap(<CalculatorPage />) },
+      { path: "compare", element: wrap(<ComparePage />) },
+      { path: "systems", element: wrap(<SystemsPage />) },
+      { path: "*", element: wrap(<NotFoundPage />) },
     ],
   },
 ]);
