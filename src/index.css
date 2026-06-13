@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Default / Emerald (dark) */
+  :root,
+  [data-theme="emerald"] {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 155 76% 52%;
+    --primary-foreground: 160 100% 6%;
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 240 4% 65%;
+    --accent: 155 76% 52%;
+    --accent-foreground: 160 100% 6%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 155 76% 52%;
+    --radius: 0.75rem;
+  }
+
+  /* Slate (dark, greyscale) */
+  [data-theme="slate"] {
+    --background: 220 13% 6%;
+    --foreground: 220 13% 96%;
+    --card: 220 13% 10%;
+    --card-foreground: 220 13% 96%;
+    --popover: 220 13% 10%;
+    --popover-foreground: 220 13% 96%;
+    --primary: 220 13% 70%;
+    --primary-foreground: 220 13% 8%;
+    --secondary: 220 13% 14%;
+    --secondary-foreground: 220 13% 96%;
+    --muted: 220 13% 14%;
+    --muted-foreground: 220 9% 60%;
+    --accent: 220 13% 70%;
+    --accent-foreground: 220 13% 8%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 13% 18%;
+    --input: 220 13% 18%;
+    --ring: 220 13% 70%;
+  }
+
+  /* Garden (light) */
+  [data-theme="garden"] {
+    --background: 60 20% 98%;
+    --foreground: 160 30% 8%;
+    --card: 0 0% 100%;
+    --card-foreground: 160 30% 8%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 160 30% 8%;
+    --primary: 155 65% 38%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 140 30% 94%;
+    --secondary-foreground: 160 30% 8%;
+    --muted: 140 30% 94%;
+    --muted-foreground: 160 12% 38%;
+    --accent: 155 65% 38%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 140 20% 88%;
+    --input: 140 20% 88%;
+    --ring: 155 65% 38%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  html,
+  body,
+  #root {
+    @apply h-full;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  .bg-emerald-ambient {
+    background:
+      radial-gradient(60% 50% at 20% 0%, hsl(var(--primary) / 0.12) 0%, transparent 60%),
+      radial-gradient(40% 40% at 90% 10%, hsl(var(--primary) / 0.10) 0%, transparent 70%),
+      linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background)) 100%);
+  }
+
+  [data-theme="slate"] .bg-emerald-ambient {
+    background:
+      radial-gradient(60% 50% at 20% 0%, hsl(220 13% 30% / 0.18) 0%, transparent 60%),
+      radial-gradient(40% 40% at 90% 10%, hsl(220 13% 25% / 0.14) 0%, transparent 70%),
+      linear-gradient(180deg, hsl(220 13% 6%) 0%, hsl(220 13% 8%) 100%);
+  }
+
+  [data-theme="garden"] .bg-emerald-ambient {
+    background:
+      radial-gradient(60% 50% at 20% 0%, hsl(155 65% 38% / 0.08) 0%, transparent 60%),
+      radial-gradient(40% 40% at 90% 10%, hsl(140 50% 60% / 0.10) 0%, transparent 70%),
+      linear-gradient(180deg, hsl(60 20% 98%) 0%, hsl(140 30% 96%) 100%);
+  }
+
+  .tier-common     { @apply bg-zinc-400; }
+  .tier-uncommon   { @apply bg-lime-500; }
+  .tier-rare       { @apply bg-sky-500; }
+  .tier-epic       { @apply bg-violet-500; }
+  .tier-legendary  { @apply bg-amber-400; }
+  .tier-mythic     { @apply bg-rose-500; }
+  .tier-super      { @apply bg-gradient-to-r from-emerald-400 to-cyan-400; }
+  .tier-pack       { @apply bg-gradient-to-r from-fuchsia-400 to-pink-400; }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar { height: 6px; width: 6px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 9999px;
+  }
+}
