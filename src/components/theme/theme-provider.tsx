@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { trackOnce } from "@/lib/use-plausible";
 
 export type Theme = "emerald" | "slate" | "garden";
 
@@ -24,12 +25,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const stored = (localStorage.getItem(STORAGE_KEY) as Theme | null) ?? "emerald";
     setThemeState(stored);
     applyTheme(stored);
+    // Don't fire a "Theme change" event on initial load — only on user-driven
+    // changes via setTheme below. The dedupe signature prevents dupes from
+    // programmatic re-applies too.
   }, []);
 
   const setTheme = (t: Theme) => {
     setThemeState(t);
     localStorage.setItem(STORAGE_KEY, t);
     applyTheme(t);
+    trackOnce("Theme change", `theme:${t}`, { theme: t });
   };
 
   return (

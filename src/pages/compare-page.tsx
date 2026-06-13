@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { GitCompare, ArrowLeftRight, TrendingUp, Timer, Coins } from "lucide-react";
 import { CROPS, MUTATIONS } from "@/data";
 import { Card, CardContent } from "@/components/ui/card";
 import { TIER_MAP } from "@/data/tiers";
 import { TierBadge } from "@/components/crops/tier-badge";
 import { cn, formatNumber, formatGrowTime } from "@/lib/utils";
+import { trackOnce } from "@/lib/use-plausible";
 
 const [aDefault, bDefault] = [CROPS[0], CROPS[15]];
 
@@ -16,6 +17,13 @@ export function ComparePage() {
   const b = CROPS.find((c) => c.slug === bSlug) ?? bDefault;
 
   const stats = useMemo(() => buildStats(a, b), [a, b]);
+
+  // Fire one event per distinct (a, b) pair — comparing the same two
+  // crops 5 times in a row only counts once.
+  useEffect(() => {
+    const pair = [a.slug, b.slug].sort().join("|");
+    trackOnce("Compare crops", `cmp:${pair}`, { a: a.slug, b: b.slug });
+  }, [a.slug, b.slug]);
 
   return (
     <div className="container py-10 max-w-5xl">

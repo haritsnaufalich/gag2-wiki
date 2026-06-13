@@ -11,35 +11,50 @@ declare global {
 }
 
 /**
- * Hooks up Plausible pageview tracking for the hash-routed SPA.
- *
- * Plausible auto-tracks full-page navigations, but the app uses
- * hash routing (#/crops, #/calculator, ...) so we manually fire a
- * `pageview` event on every route change. We dedupe consecutive
- * identical routes so the "back" button across the same page
- * doesn't double-count.
- *
- * Also exposes a `track()` helper for custom engagement events
- * (calculator use, compare use, theme change).
+ * Fire a Plausible custom event. Safe to call from anywhere
+ * (theme provider, page components, effects) — no React context
+ * required, no router required. No-ops if Plausible hasn't loaded
+ * yet (e.g., in dev mode) or if `window.plausible` is missing.
+ */
+export function track(
+  event: string,
+  props?: Record<string, string | number | boolean>
+) {
+  if (typeof window === "undefined") return;
+  if (typeof window.plausible !== "function") return;
+  window.plausible(event, props ? { props } : undefined);
+}
+
+/**
+ * Hook for hash-route pageview tracking. Call once near the root.
+ * The hook does NOT need to be called by pages — they can import
+ * the global `track()` directly for custom engagement events.
  */
 export function usePlausible() {
   const location = useLocation();
   const lastPath = useRef<string>("");
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (typeof window.plausible !== "function") return;
     const path = location.pathname + location.search + location.hash;
     if (path === lastPath.current) return;
     lastPath.current = path;
-    window.plausible("pageview");
+    track("pageview");
   }, [location]);
+}
 
-  const track = (event: string, props?: Record<string, string | number | boolean>) => {
-    if (typeof window === "undefined") return;
-    if (typeof window.plausible !== "function") return;
-    window.plausible(event, props ? { props } : undefined);
-  };
-
-  return { track };
+/**
+ * Dedupe helper — only fire if the signature (event + props) has
+ * changed since the last call. Useful for toggle / continuous inputs
+ * where the user might trigger the same event many times.
+ */
+export function trackOnce(
+  event: string,
+  signature: string,
+  props?: Record<string, string | number | boolean>
+) {
+  if (typeof window === "undefined") return;
+  const w = window as Window & { __gag2_last_track__?: string };
+  if (w.__gag2_last_track__ === signature) return;
+  w.__gag2_last_track__ = signature;
+  track(event, props);
 }

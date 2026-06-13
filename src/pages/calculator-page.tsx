@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CROPS, MUTATIONS } from "@/data";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { Sparkles, Calculator as CalcIcon, X, Timer, TrendingUp } from "lucide-react";
 import { TIER_MAP } from "@/data/tiers";
 import { TierBadge } from "@/components/crops/tier-badge";
+import { trackOnce } from "@/lib/use-plausible";
 
 export function CalculatorPage() {
   const [cropSlug, setCropSlug] = useState(CROPS[12].slug);
@@ -25,6 +26,21 @@ export function CalculatorPage() {
       activatedMutations: activated,
     };
   }, [crop, quantity, active]);
+
+  // Fire one Plausible event per distinct (crop, mutations, qty) combo
+  // — repeated clicks on the same setup don't spam the dashboard.
+  useEffect(() => {
+    trackOnce(
+      "Calculator use",
+      `calc:${crop.slug}:${quantity}:${[...active].sort().join(",")}`,
+      {
+        crop: crop.slug,
+        quantity,
+        mutations: active.size,
+        tier: crop.tier,
+      }
+    );
+  }, [crop.slug, quantity, active, crop.tier]);
 
   const shecklesPerHour =
     crop.growTimeSec > 0
