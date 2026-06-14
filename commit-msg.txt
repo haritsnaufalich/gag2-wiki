@@ -1,0 +1,44 @@
+Navbar: clean minimal redesign (logo left, nav right, green underline)
+
+User spec:
+- Logo on the LEFT (no more right-aligned theme switcher dominating)
+- Nav links on the RIGHT
+- Active link: GREEN UNDERLINE at the bottom
+- WHITE BG
+- Clean, minimal
+
+Removed:
+- Gradient logo box (was emerald gradient on sprout icon)
+- Background-fill on nav pills
+- "More" dropdown with 480px popover (Browse + Reference groups)
+- Icon on every nav link
+- Drop shadow, blur animations, slide-in transitions
+- ChevronDown on "More" button
+- Description text under dropdown items
+- aria-haspopup / role=menu complexity
+
+New structure:
+- Sticky top, white/80 + backdrop-blur (dark: zinc-950/80)
+- Border: zinc-200/60 (dark: zinc-800/60)
+- Logo (left): plain Sprout icon + "GAG" + emerald "2" + muted "Wiki"
+- Nav (right): 7 inline text links, h-16, px-4 each
+  - Crops, Calculator, Mutations, Compare, Pets, Gears, Systems
+  - Active: emerald-600/400 text + 2px emerald-500 underline
+    (absolute, left-3 right-3, rounded-full, at bottom)
+  - Inactive: zinc-500/400, hover zinc-900/100
+  - No background fill, no icon — just text + underline
+- Theme switcher (far right, small, unchanged)
+- Mobile (<md): hamburger, all 11 routes listed (4 secondary
+  ones not in the inline nav: Sprinklers, Eggs, Seed Packs,
+  Currencies)
+
+Bundle: 303.16 -> 295.11 kB (-8 kB, gzip -1.78 kB).
+Build clean, 0 TS errors.
+
+The 7 inline items fit on a 1280px screen without wrapping.
+On <md they collapse to the hamburger which has the full
+list. Theme switcher is hidden on mobile (it's inside the
+mobile menu drawer).
+
+URL unchanged: /gag2-wiki/. SW v2 still live (the 404 fix
+from the previous turn is unaffected).
