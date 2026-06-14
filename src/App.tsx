@@ -70,28 +70,35 @@ const wrap = (node: React.ReactNode) => (
   <Suspense fallback={<PageSkeleton />}>{node}</Suspense>
 );
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <SiteLayout />,
-    children: [
-      { index: true, element: wrap(<HomePage />) },
-      { path: "crops", element: wrap(<CropsPage />) },
-      { path: "crops/:slug", element: wrap(<CropDetailPage />) },
-      { path: "pets", element: wrap(<PetsPage />) },
-      { path: "gears", element: wrap(<GearsPage />) },
-      { path: "eggs", element: wrap(<EggsPage />) },
-      { path: "seed-packs", element: wrap(<SeedPacksPage />) },
-      { path: "sprinklers", element: wrap(<SprinklersPage />) },
-      { path: "currencies", element: wrap(<CurrenciesPage />) },
-      { path: "mutations", element: wrap(<MutationsPage />) },
-      { path: "calculator", element: wrap(<CalculatorPage />) },
-      { path: "compare", element: wrap(<ComparePage />) },
-      { path: "systems", element: wrap(<SystemsPage />) },
-      { path: "*", element: wrap(<NotFoundPage />) },
-    ],
-  },
-]);
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <SiteLayout />,
+      children: [
+        { index: true, element: wrap(<HomePage />) },
+        { path: "crops", element: wrap(<CropsPage />) },
+        { path: "crops/:slug", element: wrap(<CropDetailPage />) },
+        { path: "pets", element: wrap(<PetsPage />) },
+        { path: "gears", element: wrap(<GearsPage />) },
+        { path: "eggs", element: wrap(<EggsPage />) },
+        { path: "seed-packs", element: wrap(<SeedPacksPage />) },
+        { path: "sprinklers", element: wrap(<SprinklersPage />) },
+        { path: "currencies", element: wrap(<CurrenciesPage />) },
+        { path: "mutations", element: wrap(<MutationsPage />) },
+        { path: "calculator", element: wrap(<CalculatorPage />) },
+        { path: "compare", element: wrap(<ComparePage />) },
+        { path: "systems", element: wrap(<SystemsPage />) },
+        { path: "*", element: wrap(<NotFoundPage />) },
+      ],
+    },
+  ],
+  // D14: site deploys to the /gag2-wiki/ subpath. Without this basename,
+  // createBrowserRouter reads window.location.pathname as "/gag2-wiki/"
+  // and the home route (index: true) fails to match — the user lands on
+  // NotFoundPage with the layout (navbar + footer) still rendered above it.
+  { basename: "/gag2-wiki" }
+);
 
 export function App() {
   // The route tracker is now inside <SiteLayout> itself, rendered
