@@ -49,24 +49,6 @@ export const MUTATIONS: Mutation[] = [
     source: "Lightning weather (5 min duration)",
     blurb: "High-voltage mutation. The biggest single mutation multiplier.",
   },
-  {
-    slug: "starstruck",
-    name: "Starstruck",
-    emoji: "🌠",
-    kind: "mutation",
-    multiplier: null,
-    source: "Starfall weather (2 min duration)",
-    blurb: "Cosmic mutation from shooting stars. Multiplier TBD on the canonical wiki.",
-  },
-  {
-    slug: "bloodlit",
-    name: "Bloodlit",
-    emoji: "🩸",
-    kind: "mutation",
-    multiplier: null,
-    source: "TBA",
-    blurb: "Mysterious mutation. Source and multiplier are TBD on the canonical wiki.",
-  },
 ];
 
 export const MUTATION_MAP: Record<string, Mutation> = MUTATIONS.reduce(

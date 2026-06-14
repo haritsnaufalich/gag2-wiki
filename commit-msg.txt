@@ -1,19 +1,63 @@
-Lock: site deploys to /gag2-wiki/ subpath (D14)
+Phase 13: canonical-wiki audit fixes (all medium-severity)
 
-Per the user directive "KEEP IT ON /gag2-wiki", make the
-github.io subpath explicit and non-trivial to change.
+The recent re-fetch of growagarden2wiki.com surfaced three
+medium-severity discrepancies. All three are fixed in this
+commit.
 
-Verified the current state already matches: Vite base is "./"
-(relative — works on any host), SITE_URL constant in the
-SEO helper is the github.io subpath, the sitemap uses it,
-and the gh-pages deploy is live at that URL.
+1) Mutations: beebom-sourced extras dropped
+   Removed Starstruck and Bloodlit from src/data/mutations.ts.
+   Both were added in Phase 11 from beebom, which flagged them
+   as TBA. The canonical /mutations/ page lists only 4: Gold 15x,
+   Rainbow 40x, Frozen 5x, Electric 80x. The beebom D3 entry is
+   already deprecated; these two were not safe to keep without a
+   canonical source. Downstream consumers (mutations-page,
+   calculator-page, crop-detail-page) auto-pick up the new count
+   from MUTATIONS.length / WIKI_STATS.totalMutations.
 
-What changed:
-- vite.config.ts: added a 10-line comment above `base: "./"`
-  explaining the github.io subpath lock, why relative paths
-  are the right choice, and a DO NOT change warning.
-- MEMORY.md: added D14 capturing the same intent for future
-  sessions.
+2) Unobtainable crops added
+   Added 4 new entries to crops.ts that match the canonical
+   /crops/ "Unobtainable Crops" section:
+     - lotus       (unknown tier, water-blooming, unreleased)
+     - pumpkin     (unknown tier, seasonal, unreleased)
+     - thorn-rose  (unknown tier, locked behind future content)
+     - romanesco   (mythic tier, admin/test-build exclusive)
+   All value/weight/stock fields null until canonical publishes
+   them. baseValue 0 (no known market value). Each has an
+   original blurb (per D7, no canonical phrasing copied).
 
-No code behavior change. The site was already on /gag2-wiki
-and continues to be.
+3) Special Seeds added
+   Added 2 new entries that match the canonical
+   /crops/ "Special Seeds" section:
+     - gold-seed    (legendary, plants a random seed with Gold 15x)
+     - rainbow-seed (mythic,   plants a random seed with Rainbow 40x)
+   obtainment = "event" (drop from Midas / Rainbow events).
+   baseValue 0; value/weight fields null.
+
+Bonus (related): fixed obtainment for the 5 Ghost Pepper Pack
+crops that had been "unknown" since Phase 12.
+   baby-cactus, horned-melon, glow-mushroom, poison-ivy,
+   ghost-pepper: unknown -> "pack"
+   Added "pack" to the Obtainment union type and a case in
+   obtainmentLabel() that maps it to "Seed Pack". Low severity
+   per the audit but bundled here because it's the same data
+   shape as the new additions.
+
+Wired-in updates (no code changes needed, dynamic from data):
+  - WIKI_STATS: totalCrops 30 -> 36, totalMutations 6 -> 4
+  - mutations-page.tsx: still renders 4 mutations + 2 variants +
+    2 weather (description was templated from MUTATIONS.length)
+  - home-page.tsx + index.html og:description: "30 crops / 6
+    mutations" -> "36 crops / 4 mutations" (now derives from
+    WIKI_STATS)
+  - public/og-image.svg: text updated to "36 crops / 4 mutations",
+    PNG regenerated (sharp), 1200x630
+  - public/manifest.webmanifest: description + Crops shortcut
+    description updated
+  - public/sitemap.xml: regenerated from src/data/crops.ts,
+    46 URLs (was 40), 36 crop slugs
+
+Verification: build clean, 0 TS errors, all chunks emitted.
+The mutations-page now shows 4 mutation cards (was 6); users
+navigating to /crops/lotus, /crops/pumpkin, etc. will now
+land on the new unobtainable/special-seed pages instead of
+the 404 NotFoundPage.

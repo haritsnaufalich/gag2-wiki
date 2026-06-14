@@ -37,7 +37,7 @@
 
   <!-- Subtitle / stats -->
   <g transform="translate(80,520)" font-family="ui-sans-serif, system-ui, -apple-system, Poppins, Segoe UI, sans-serif" fill="#a1a1aa">
-    <text x="0" y="0" font-size="22" font-weight="500">30 crops · 6 mutations · 8 tiers · calculators · compare · systems</text>
+    <text x="0" y="0" font-size="22" font-weight="500">36 crops · 4 mutations · 8 tiers · calculators · compare · systems</text>
     <text x="0" y="32" font-size="18" font-weight="500">+ 27 gears · 3 eggs · 4 seed packs · 12 pets</text>
     <text x="0" y="64" font-size="18" font-weight="400" fill="#71717a">Dark + emerald · Tailwind + shadcn · Fan-made companion</text>
   </g>

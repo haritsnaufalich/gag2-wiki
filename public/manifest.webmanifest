@@ -1,7 +1,7 @@
 {
   "name": "Grow A Garden 2 Wiki",
   "short_name": "GAG2 Wiki",
-  "description": "Fan-made companion wiki for the Roblox farming game Grow A Garden 2 — 30 crops, 5 mutations, calculators, compare, and systems.",
+  "description": "Fan-made companion wiki for the Roblox farming game Grow A Garden 2 — 36 crops, 4 mutations, calculators, compare, and systems.",
   "start_url": "./",
   "scope": "./",
   "id": "/gag2-wiki",
@@ -59,7 +59,7 @@
     {
       "name": "Crops",
       "short_name": "Crops",
-      "description": "Browse all 30 crops across 8 tiers",
+      "description": "Browse all 36 crops across 8 tiers",
       "url": "./crops",
       "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     },

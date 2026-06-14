@@ -8,9 +8,9 @@ export * from "./eggs";
 export * from "./seed-packs";
 
 export const WIKI_STATS = {
-  totalCrops: 30,
+  totalCrops: 36,
   totalTiers: 8,
-  totalMutations: 6,
+  totalMutations: 4,
   totalPets: 12,
   totalGears: 27,
   totalEggs: 3,

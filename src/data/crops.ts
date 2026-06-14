@@ -23,7 +23,8 @@ export type Obtainment =
   | "code"
   | "unknown"
   | "event"
-  | "premium";
+  | "premium"
+  | "pack";
 
 export interface Crop {
   /** URL slug used in routes. */
@@ -763,7 +764,7 @@ export const CROPS: Crop[] = [
 
     baseValue: 3200,
     family: "special",
-    obtainment: "unknown",
+    obtainment: "pack",
     blurb: "Tiny desert starter. Pulled from the the wiki.",
     tags: ["pack-exclusive", "starter"],
   },
@@ -788,7 +789,7 @@ export const CROPS: Crop[] = [
 
     baseValue: 8800,
     family: "fruit",
-    obtainment: "unknown",
+    obtainment: "pack",
     blurb: "Spiky exotic fruit — a Pack-exclusive oddity.",
     tags: ["exotic", "pack-exclusive"],
   },
@@ -813,7 +814,7 @@ export const CROPS: Crop[] = [
 
     baseValue: 14500,
     family: "fungus",
-    obtainment: "unknown",
+    obtainment: "pack",
     blurb: "Bioluminescent fungus. Luminous, Pack-only, and collectible.",
     tags: ["luminous", "pack-exclusive"],
   },
@@ -838,7 +839,7 @@ export const CROPS: Crop[] = [
 
     baseValue: 38000,
     family: "special",
-    obtainment: "unknown",
+    obtainment: "pack",
     blurb: "Vining toxic plant. Pack-exclusive and a top-tier event piece.",
     tags: ["toxic", "pack-exclusive"],
   },
@@ -863,9 +864,169 @@ export const CROPS: Crop[] = [
 
     baseValue: 142000,
     family: "vegetable",
-    obtainment: "unknown",
+    obtainment: "pack",
     blurb: "Headliner of its own pack. Spicy, single-harvest, premium payout.",
     tags: ["pack-exclusive", "headline"],
+  },
+
+  // ── Unobtainable (game files only) ────────────────────────────
+  {
+    slug: "lotus",
+    name: "Lotus",
+    emoji: "🪷",
+    tier: "unknown",
+    growTimeSec: null,
+    multiHarvest: null,
+    multiHarvestSource: "canonical",
+    seedPriceSheckles: null,
+    seedPriceRobux: null,
+    valueFloor: null,
+    valueAvg: null,
+    valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
+    weightFloorG: null,
+    weightAvgG: null,
+    weightMinG: null,
+    hugeChancePct: null,
+
+    baseValue: 0,
+    family: "flower",
+    obtainment: "unknown",
+    blurb: "Water-blooming crop present in the game files but not yet released.",
+    tags: ["unreleased", "water"],
+  },
+  {
+    slug: "pumpkin",
+    name: "Pumpkin",
+    emoji: "🎃",
+    tier: "unknown",
+    growTimeSec: null,
+    multiHarvest: null,
+    multiHarvestSource: "canonical",
+    seedPriceSheckles: null,
+    seedPriceRobux: null,
+    valueFloor: null,
+    valueAvg: null,
+    valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
+    weightFloorG: null,
+    weightAvgG: null,
+    weightMinG: null,
+    hugeChancePct: null,
+
+    baseValue: 0,
+    family: "vegetable",
+    obtainment: "unknown",
+    blurb: "Seasonal crop slated for a future release window.",
+    tags: ["unreleased", "seasonal"],
+  },
+  {
+    slug: "thorn-rose",
+    name: "Thorn Rose",
+    emoji: "🌹",
+    tier: "unknown",
+    growTimeSec: null,
+    multiHarvest: null,
+    multiHarvestSource: "canonical",
+    seedPriceSheckles: null,
+    seedPriceRobux: null,
+    valueFloor: null,
+    valueAvg: null,
+    valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
+    weightFloorG: null,
+    weightAvgG: null,
+    weightMinG: null,
+    hugeChancePct: null,
+
+    baseValue: 0,
+    family: "flower",
+    obtainment: "unknown",
+    blurb: "Locked behind unreleased content. No public seed source yet.",
+    tags: ["unreleased", "locked"],
+  },
+  {
+    slug: "romanesco",
+    name: "Romanesco",
+    emoji: "🥦",
+    tier: "mythic",
+    growTimeSec: null,
+    multiHarvest: null,
+    multiHarvestSource: "canonical",
+    seedPriceSheckles: null,
+    seedPriceRobux: null,
+    valueFloor: null,
+    valueAvg: null,
+    valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
+    weightFloorG: null,
+    weightAvgG: null,
+    weightMinG: null,
+    hugeChancePct: null,
+
+    baseValue: 0,
+    family: "vegetable",
+    obtainment: "unknown",
+    blurb: "Mythic-tier crop reserved for admin and test builds. Not obtainable in normal play.",
+    tags: ["admin-exclusive", "mythic"],
+  },
+
+  // ── Special Seeds (guarantee a variant) ─────────────────────────
+  {
+    slug: "gold-seed",
+    name: "Gold Seed",
+    emoji: "🌟",
+    tier: "legendary",
+    growTimeSec: null,
+    multiHarvest: null,
+    multiHarvestSource: "canonical",
+    seedPriceSheckles: null,
+    seedPriceRobux: null,
+    valueFloor: null,
+    valueAvg: null,
+    valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
+    weightFloorG: null,
+    weightAvgG: null,
+    weightMinG: null,
+    hugeChancePct: null,
+
+    baseValue: 0,
+    family: "special",
+    obtainment: "event",
+    blurb: "Plants a random seed with the guaranteed Gold mutation (15×). Drops from the Midas event.",
+    tags: ["special", "variant-seed", "event-exclusive"],
+  },
+  {
+    slug: "rainbow-seed",
+    name: "Rainbow Seed",
+    emoji: "🌈",
+    tier: "mythic",
+    growTimeSec: null,
+    multiHarvest: null,
+    multiHarvestSource: "canonical",
+    seedPriceSheckles: null,
+    seedPriceRobux: null,
+    valueFloor: null,
+    valueAvg: null,
+    valuePerGram: null,
+    valueObservations: [],
+    valueCurve: null,
+    weightFloorG: null,
+    weightAvgG: null,
+    weightMinG: null,
+    hugeChancePct: null,
+
+    baseValue: 0,
+    family: "special",
+    obtainment: "event",
+    blurb: "Plants a random seed with the guaranteed Rainbow mutation (40×). Drops from the Rainbow event.",
+    tags: ["special", "variant-seed", "event-exclusive"],
   },
 ];
 
@@ -889,5 +1050,6 @@ export function obtainmentLabel(o: Obtainment): string {
     case "unknown": return "Unknown Drop";
     case "event": return "Event Drop";
     case "premium": return "Robux Premium";
+    case "pack": return "Seed Pack";
   }
 }
