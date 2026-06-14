@@ -10,6 +10,14 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // base: "./" — relative asset paths. The site deploys to
+  // https://haritsnaufalich.github.io/gag2-wiki/ (a subpath under
+  // github.io). Relative paths mean index.html and 404.html both
+  // resolve ./assets/* correctly regardless of which URL they're
+  // served from. **DO NOT change to an absolute path like
+  // "/gag2-wiki/"** — the site is locked to the github.io subpath
+  // and an absolute base would break local previews and any future
+  // re-deploy to a different host.
   base: "./",
   build: {
     outDir: "dist",
