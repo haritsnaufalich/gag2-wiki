@@ -1,268 +1,168 @@
+import { ArrowRight, Sprout, Sparkles, Calculator, PawPrint, Gift } from "lucide-react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Sprout, Sparkles, Calculator, Layers, Settings2, GitCompare, Gift, Wrench, Egg, Package } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { JsonLd, SITE_URL, SITE_NAME, PUBLISHER, OG_IMAGE } from "@/components/seo/json-ld";
-import { CROPS, TIERS, WIKI_STATS } from "@/data";
-import { formatNumber } from "@/lib/utils";
+import { Card, CardContent } from "@/components/ui/card";
+import { CROPS } from "@/data/crops";
+import { WIKI_STATS } from "@/data/index";
+import { TIERS, type TierId } from "@/data/tiers";
+import { TierBadge } from "@/components/crops/tier-badge";
+import { useTheme } from "@/components/theme/theme-provider";
 
-const QUICK_FEATURES = [
-  { icon: Sprout, title: "Crop Database", desc: "30 crops across 8 tiers.", href: "/crops" },
-  { icon: Sparkles, title: "Mutations", desc: "Gold, Rainbow, Electric…", href: "/mutations" },
-  { icon: Calculator, title: "Value Calculator", desc: "Stack mutations, see totals.", href: "/calculator" },
-  { icon: GitCompare, title: "Compare", desc: "Side-by-side ROI breakdown.", href: "/compare" },
-  { icon: Wrench, title: "Gears", desc: "Sprinklers, tools, mushrooms.", href: "/gears" },
-  { icon: Egg, title: "Eggs", desc: "Hatchable pet eggs.", href: "/eggs" },
-  { icon: Package, title: "Seed Packs", desc: "Robux bundles with rarity odds.", href: "/seed-packs" },
-  { icon: Layers, title: "Tier Progression", desc: "Common → Super → Pack drops.", href: "/crops" },
-  { icon: Settings2, title: "Game Systems", desc: "Time, economy, stealing rules.", href: "/systems" },
+type QuickLink = {
+  to: string;
+  title: string;
+  desc: string;
+  Icon: typeof Sprout;
+  accent: "emerald" | "amber" | "violet" | "rose";
+};
+
+const QUICK_LINKS: QuickLink[] = [
+  { to: "/crops",      title: "Crops",      desc: "Browse the 36-crop catalog with values, weights and stock chances.", Icon: Sprout,    accent: "emerald" },
+  { to: "/calculator", title: "Calculator", desc: "Estimate Sheckle yield from mutations, friend boost and weight.",   Icon: Calculator, accent: "amber"   },
+  { to: "/mutations",  title: "Mutations",  desc: "Stack Gold × Rainbow + Frozen + Electric for 3,440× combos.",       Icon: Sparkles,  accent: "violet"  },
+  { to: "/pets",       title: "Pets",       desc: "12 tameable companions with rarity, cost and spawn locations.",     Icon: PawPrint,  accent: "rose"    },
 ];
 
+const ACCENT_RING: Record<QuickLink["accent"], string> = {
+  emerald: "group-hover:border-emerald-400/60 group-focus-visible:border-emerald-400",
+  amber:   "group-hover:border-amber-400/60   group-focus-visible:border-amber-400",
+  violet:  "group-hover:border-violet-400/60  group-focus-visible:border-violet-400",
+  rose:    "group-hover:border-rose-400/60    group-focus-visible:border-rose-400",
+};
+const ACCENT_ICON: Record<QuickLink["accent"], string> = {
+  emerald: "text-emerald-400",
+  amber:   "text-amber-400",
+  violet:  "text-violet-400",
+  rose:    "text-rose-400",
+};
+
 export function HomePage() {
-  const featured = CROPS.filter((c) => c.tier === "legendary").slice(0, 4);
-  const packSeeds = CROPS.filter((c) => c.tier === "unknown").slice(0, 5);
+  const { theme } = useTheme();
+  const dark = theme !== "garden";
+
+  const featuredCrops = TIERS
+    .slice()
+    .sort((a, b) => a.order - b.order)
+    .flatMap((tier) => CROPS.filter((c) => c.tier === tier.id && c.obtainment !== "unknown" && c.obtainment !== "event"))
+    .slice(0, 4);
 
   return (
-    <>
-      <JsonLd
-        schema={{
-          "@context": "https://schema.org",
-          "@type": "WebPage",
-          name: `${SITE_NAME} - Home`,
-          description: `${WIKI_STATS.totalCrops} crops across ${WIKI_STATS.totalTiers} tiers, ${WIKI_STATS.totalMutations} mutations, ${WIKI_STATS.totalGears} gears, ${WIKI_STATS.totalEggs} egg types, ${WIKI_STATS.totalSeedPacks} seed packs.`,
-          url: SITE_URL + "/",
-          image: OG_IMAGE,
-          inLanguage: "en",
-          isPartOf: {
-            "@type": "WebSite",
-            name: SITE_NAME,
-            url: SITE_URL,
-          },
-          publisher: PUBLISHER,
+    <div className="flex flex-col">
+      <section
+        className="relative overflow-hidden border-b border-border/40"
+        style={{
+          background: dark
+            ? "radial-gradient(ellipse at top, rgba(16,185,129,0.18) 0%, transparent 60%)"
+            : "radial-gradient(ellipse at top, rgba(16,185,129,0.08) 0%, transparent 60%)",
         }}
-      />
-    <div className="bg-emerald-ambient">
-      {/* Hero */}
-      <section className="container pt-16 pb-12 md:pt-24 md:pb-20">
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/5 px-3 py-1 text-xs font-medium text-emerald-400">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-full w-2 rounded-full bg-emerald-400" />
-            </span>
-            Live · v{WIKI_STATS.version} · Updated {WIKI_STATS.lastUpdated}
-          </div>
-
-          <h1 className="mt-6 text-4xl md:text-6xl font-bold tracking-tight text-balance">
-            The companion wiki for{" "}
-            <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+      >
+        <div className="container max-w-4xl py-24 md:py-32 text-center">
+          <p className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/40 px-3 py-1 text-xs font-medium text-muted-foreground">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" aria-hidden />
+            Live · {WIKI_STATS.totalCrops} crops · {WIKI_STATS.totalMutations} mutations · {WIKI_STATS.totalTiers} tiers
+          </p>
+          <h1 className="mt-6 text-4xl md:text-6xl font-bold tracking-tight leading-[1.05]">
+            The companion wiki for
+            <br className="hidden sm:block" />
+            <span className="bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-400 bg-clip-text text-transparent">
               Grow A Garden 2
             </span>
           </h1>
-          <p className="mt-5 text-lg text-muted-foreground max-w-2xl text-balance">
-            {WIKI_STATS.totalCrops} crops across {WIKI_STATS.totalTiers} tiers,{" "}
-            {WIKI_STATS.totalMutations} mutations, {WIKI_STATS.totalGears} gears,{" "}
-            {WIKI_STATS.totalEggs} egg types, {WIKI_STATS.totalSeedPacks} seed
-            packs — plus calculators and comparison tools that respect the math.
+          <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Crops, mutations, pets, calculators and systems — sourced from the
+            canonical wiki, condensed for fast lookup. No login, no ads, no
+            third-party trackers beyond anonymous page-view stats.
           </p>
-
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button size="lg" asChild>
-              <Link to="/crops">
-                Browse Crops <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link to="/calculator">Open Calculator</Link>
-            </Button>
-          </div>
-
-          <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 max-w-3xl">
-            <Stat label="Crops" value={WIKI_STATS.totalCrops.toString()} />
-            <Stat label="Tiers" value={WIKI_STATS.totalTiers.toString()} />
-            <Stat label="Mutations" value={WIKI_STATS.totalMutations.toString()} />
-            <Stat label="Gears" value={WIKI_STATS.totalGears.toString()} />
-            <Stat label="Eggs" value={WIKI_STATS.totalEggs.toString()} />
-            <Stat label="Packs" value={WIKI_STATS.totalSeedPacks.toString()} />
-            <Stat label="Systems" value={WIKI_STATS.totalSystems.toString()} />
-          </div>
-        </div>
-      </section>
-
-      {/* Active Code banner */}
-      <section className="container">
-        <div className="rounded-2xl border border-emerald-400/30 bg-emerald-400/5 p-5 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="grid h-10 w-10 place-items-center rounded-lg bg-emerald-400/10 text-emerald-400">
-              <Gift className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="text-xs text-muted-foreground uppercase tracking-wider">
-                Active code
-              </div>
-              <code className="font-mono text-lg text-emerald-400">
-                {WIKI_STATS.activeCode}
-              </code>
-            </div>
-          </div>
-          <p className="text-sm text-muted-foreground max-w-md">
-            Redeem in-game for 3 free Green Bean seeds. Codes expire — check
-            the systems page for more.
-          </p>
-        </div>
-      </section>
-
-      {/* Quick features */}
-      <section className="container py-10">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {QUICK_FEATURES.map(({ icon: Icon, title, desc, href }) => (
-            <Link key={title} to={href} className="group">
-              <Card className="h-full p-5 transition-all hover:border-emerald-400/40 hover:-translate-y-0.5">
-                <Icon className="h-5 w-5 text-emerald-400" />
-                <h3 className="mt-3 font-semibold group-hover:text-emerald-400 transition-colors">
-                  {title}
-                </h3>
-                <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
-              </Card>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Unknown seeds strip */}
-      <section className="container pb-10">
-        <div className="flex items-end justify-between gap-4 mb-4">
-          <div>
-            <h2 className="text-2xl font-semibold tracking-tight">
-              the wiki drops
-            </h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              Pack-exclusive seeds with no shop listing. Roll to obtain.
-            </p>
-          </div>
-          <Link
-            to="/crops#tier-pack"
-            className="text-sm text-emerald-400 hover:underline inline-flex items-center gap-1"
-          >
-            See all <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
-          {packSeeds.map((c) => (
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
-              key={c.slug}
-              to={`/crops/${c.slug}`}
-              className="rounded-xl border border-border/60 bg-card/60 p-3 hover:border-fuchsia-400/40 transition-all group"
+              to="/crops"
+              className="inline-flex items-center gap-2 rounded-md bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition-colors hover:bg-emerald-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
             >
-              <div className="flex items-center justify-between">
-                <span className="text-2xl">{c.emoji}</span>
-                <span className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-fuchsia-400 to-pink-400" />
-              </div>
-              <h3 className="mt-2 font-medium text-sm group-hover:text-fuchsia-400 transition-colors">
-                {c.name}
-              </h3>
-              <p className="text-[10px] text-muted-foreground mt-0.5">
-                Pack exclusive
-              </p>
+              Browse Crops <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
-          ))}
+            <Link
+              to="/calculator"
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-card/50 px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+            >
+              Open Calculator
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Featured crops */}
-      <section className="container py-10">
-        <div className="flex items-end justify-between gap-4 mb-5">
-          <div>
-            <h2 className="text-2xl font-semibold tracking-tight">
-              Featured · Legendary
-            </h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              The chase that defines top-tier plots.
-            </p>
-          </div>
+      <section aria-labelledby="quick-links-heading" className="container max-w-5xl py-16 md:py-20">
+        <h2 id="quick-links-heading" className="sr-only">
+          Quick links
+        </h2>
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {QUICK_LINKS.map((q) => (
+            <li key={q.to}>
+              <Link
+                to={q.to}
+                className={`group block h-full rounded-xl border border-border/60 bg-card/40 p-6 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 ${ACCENT_RING[q.accent]}`}
+              >
+                <q.Icon className={`h-6 w-6 ${ACCENT_ICON[q.accent]}`} aria-hidden />
+                <h3 className="mt-4 font-semibold text-base">{q.title}</h3>
+                <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{q.desc}</p>
+                <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors group-hover:text-foreground">
+                  Open <ArrowRight className="h-3 w-3" aria-hidden />
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section aria-labelledby="featured-heading" className="container max-w-5xl pb-16 md:pb-20">
+        <div className="flex items-baseline justify-between gap-4 mb-5">
+          <h2 id="featured-heading" className="text-lg font-semibold tracking-tight">
+            Featured crops
+          </h2>
           <Link
             to="/crops"
-            className="text-sm text-emerald-400 hover:underline inline-flex items-center gap-1"
+            className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 rounded-sm"
           >
-            View all <ArrowRight className="h-3.5 w-3.5" />
+            View all 36 →
           </Link>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {featured.map((c) => (
-            <Link
-              key={c.slug}
-              to={`/crops/${c.slug}`}
-              className="group rounded-xl border border-border/60 bg-card/60 p-5 hover:border-emerald-400/40 transition-all"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-3xl">{c.emoji}</span>
-                <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
-                  {c.tier}
-                </span>
-              </div>
-              <h3 className="mt-3 font-semibold group-hover:text-emerald-400 transition-colors">
-                {c.name}
-              </h3>
-              <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                {c.blurb}
-              </p>
-              <div className="mt-3 text-xs text-muted-foreground">
-                Base value ·{" "}
-                <span className="text-foreground font-medium">
-                  {formatNumber(c.baseValue)}
-                </span>{" "}
-                ¢
-              </div>
-            </Link>
+        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {featuredCrops.map((c) => (
+            <li key={c.slug}>
+              <Link
+                to={`/crops/${c.slug}`}
+                className="block h-full rounded-lg border border-border/60 bg-card/40 p-4 transition-colors hover:border-emerald-400/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="text-2xl" aria-hidden>{c.emoji}</div>
+                  <TierBadge tier={c.tier as TierId} />
+                </div>
+                <h3 className="mt-3 font-semibold text-sm leading-tight">{c.name}</h3>
+                <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
+                  {c.blurb}
+                </p>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
-      {/* Tier ladder */}
-      <section className="container py-10">
-        <h2 className="text-2xl font-semibold tracking-tight mb-1">
-          Tier Ladder
-        </h2>
-        <p className="text-sm text-muted-foreground mb-5">
-          Visual progression from common to pack drops.
-        </p>
-        <Card className="p-5">
-          <div className="flex flex-wrap items-center gap-2">
-            {TIERS.map((t, i) => {
-              const count = CROPS.filter((c) => c.tier === t.id).length;
-              return (
-                <div key={t.id} className="flex items-center gap-2">
-                  <Link
-                    to={`/crops#tier-${t.id}`}
-                    className="group flex items-center gap-2 rounded-lg border border-border/60 bg-background/40 px-3 py-1.5 hover:border-emerald-400/40 transition-all"
-                  >
-                    <span className={`h-2 w-2 rounded-full ${t.dotClass}`} />
-                    <span className="text-sm font-medium">{t.label}</span>
-                    <span className="text-xs text-muted-foreground">
-                      · {count}
-                    </span>
-                  </Link>
-                  {i < TIERS.length - 1 && (
-                    <span className="text-muted-foreground/40">→</span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+      <section className="container max-w-5xl pb-20">
+        <Card className="overflow-hidden border-amber-400/30 bg-gradient-to-br from-amber-500/10 via-card/40 to-card/40">
+          <CardContent className="p-6 md:p-8 flex flex-col sm:flex-row sm:items-center gap-5">
+            <div className="grid h-12 w-12 place-items-center rounded-full bg-amber-400/15 shrink-0">
+              <Gift className="h-6 w-6 text-amber-400" aria-hidden />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-base">Active in-game code</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Redeem in Grow A Garden 2 for free seeds. Codes expire — check back often.
+              </p>
+            </div>
+            <code className="self-start sm:self-center inline-block rounded-md bg-secondary px-4 py-2 text-base font-mono font-semibold text-emerald-400 tracking-wider">
+              TEAMGREENBEAN
+            </code>
+          </CardContent>
         </Card>
       </section>
-    </div>
-    </>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-lg border border-border/60 bg-card/60 p-3">
-      <div className="text-2xl font-semibold tracking-tight">{value}</div>
-      <div className="text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">
-        {label}
-      </div>
     </div>
   );
 }
