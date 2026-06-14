@@ -1,63 +1,75 @@
-Phase 13: canonical-wiki audit fixes (all medium-severity)
+Phase 14: low-priority audit fixes (Stock Chance + new pages)
 
-The recent re-fetch of growagarden2wiki.com surfaced three
-medium-severity discrepancies. All three are fixed in this
-commit.
+Stock Chance field (the remaining explicit 'low' item)
+- Added stockChancePct to the Crop interface (canonical has a
+  Stock Chance column on every crop; we were missing it)
+- Populated 30 shop crops + 5 Ghost Pepper Pack crops with the
+  exact canonical percentages (Carrot 100%, Strawberry 100%,
+  ..., Dragon's Breath 0.275%)
+- Unobtainable + special seeds: stockChancePct = null (they
+  don't roll in the regular shop)
+- Note: a first-pass script produced 7 misaligned values
+  (carrot + 6 unobtainables); fixed manually with targeted Edits
 
-1) Mutations: beebom-sourced extras dropped
-   Removed Starstruck and Bloodlit from src/data/mutations.ts.
-   Both were added in Phase 11 from beebom, which flagged them
-   as TBA. The canonical /mutations/ page lists only 4: Gold 15x,
-   Rainbow 40x, Frozen 5x, Electric 80x. The beebom D3 entry is
-   already deprecated; these two were not safe to keep without a
-   canonical source. Downstream consumers (mutations-page,
-   calculator-page, crop-detail-page) auto-pick up the new count
-   from MUTATIONS.length / WIKI_STATS.totalMutations.
+Robux seed prices for 18 more crops
+- Previously had Robux for 8 crops (Carrot, Tulip, Tomato,
+  Dragon Fruit, Venus Fly Trap, Moon Bloom, Dragon's Breath,
+  Thorn Rose)
+- Filled in the missing 18: Strawberry 7/21/70, Blueberry 12/36/120,
+  Apple 29/87/290, Bamboo 17/51/170, Corn 69/207/690,
+  Cactus 79/237/790, Pineapple 99/297/990, Mushroom 69/207/690,
+  Green Bean 99/297/990, Banana 119/357/1190, Grape 139/417/1390,
+  Coconut 149/447/1490, Mango 199/597/1990, Acorn 379/1137/3790,
+  Cherry 479/1437/4790, Sunflower 599/1797/5990, Pomegranate
+  999/2997/9990, Poison Apple 1299/3897/12990
+- All 26 obtainable shop crops now have Robux prices
+- Pack crops, unobtainable, and special seeds stay at Robux=null
+  (canonical doesn't list Robux for these)
 
-2) Unobtainable crops added
-   Added 4 new entries to crops.ts that match the canonical
-   /crops/ "Unobtainable Crops" section:
-     - lotus       (unknown tier, water-blooming, unreleased)
-     - pumpkin     (unknown tier, seasonal, unreleased)
-     - thorn-rose  (unknown tier, locked behind future content)
-     - romanesco   (mythic tier, admin/test-build exclusive)
-   All value/weight/stock fields null until canonical publishes
-   them. baseValue 0 (no known market value). Each has an
-   original blurb (per D7, no canonical phrasing copied).
+NPC locations (the data was in MEMORY.md but never rendered)
+- New file: src/data/npcs.ts (5 NPCs: Sam, George, Charlotte,
+  Steven, Gilbert, each with role + location)
+- systems-page.tsx: added an NPCs section under "Guilds &
+  Events" that renders the data with the location field
+- Before this commit, the NPCs were listed in MEMORY.md but the
+  UI had no NPCs section at all
 
-3) Special Seeds added
-   Added 2 new entries that match the canonical
-   /crops/ "Special Seeds" section:
-     - gold-seed    (legendary, plants a random seed with Gold 15x)
-     - rainbow-seed (mythic,   plants a random seed with Rainbow 40x)
-   obtainment = "event" (drop from Midas / Rainbow events).
-   baseValue 0; value/weight fields null.
+New pages: /sprinklers and /currencies (from the audit's
+"future / nice-to-have" list)
+- src/data/sprinklers.ts: 5 sprinklers (Common, Uncommon, Rare,
+  Legendary, Super) with Robux + Sheckle alt prices
+- src/data/currencies.ts: 5 Sheckle packs + 7 Robux features
+  (Grow Plant, Grow All, restocks, backpack, inventory slot)
+  + friend-boost constants (FRIEND_BOOST_PCT_PER_FRIEND=10,
+  FRIEND_BOOST_MAX_FRIENDS=4)
+- src/pages/sprinklers-page.tsx: card grid, each card shows
+  rarity + price (Robux + optional Sheckle alt) + blurb
+- src/pages/currencies-page.tsx: friend boost summary + Sheckle
+  packs (5-up grid) + Robux features (3-up grid)
+- App.tsx: lazy routes for /sprinklers and /currencies
+- header.tsx: nav updated to 12 items (added Sprinklers and
+  Coins, with a 4-card mobile collapse handled by the existing
+  hamburger menu)
 
-Bonus (related): fixed obtainment for the 5 Ghost Pepper Pack
-crops that had been "unknown" since Phase 12.
-   baby-cactus, horned-melon, glow-mushroom, poison-ivy,
-   ghost-pepper: unknown -> "pack"
-   Added "pack" to the Obtainment union type and a case in
-   obtainmentLabel() that maps it to "Seed Pack". Low severity
-   per the audit but bundled here because it's the same data
-   shape as the new additions.
+Header nav now has 12 items (Home, Crops, Pets, Gears,
+Sprinklers, Eggs, Packs, Mutations, Calculator, Compare,
+Coins, Systems). On lg+ they all show inline; below lg
+they collapse into the hamburger menu (already aria-expanded
++ escape-to-close from the Phase 12 audit).
 
-Wired-in updates (no code changes needed, dynamic from data):
-  - WIKI_STATS: totalCrops 30 -> 36, totalMutations 6 -> 4
-  - mutations-page.tsx: still renders 4 mutations + 2 variants +
-    2 weather (description was templated from MUTATIONS.length)
-  - home-page.tsx + index.html og:description: "30 crops / 6
-    mutations" -> "36 crops / 4 mutations" (now derives from
-    WIKI_STATS)
-  - public/og-image.svg: text updated to "36 crops / 4 mutations",
-    PNG regenerated (sharp), 1200x630
-  - public/manifest.webmanifest: description + Crops shortcut
-    description updated
-  - public/sitemap.xml: regenerated from src/data/crops.ts,
-    46 URLs (was 40), 36 crop slugs
+Build impact: main bundle 296.98 → 298.67 kB (+1.7 kB for
+the new data and page components, lazy-loaded for non-affected
+routes). Two new per-page chunks emitted:
+  - sprinklers-page-*.js
+  - currencies-page-*.js
 
-Verification: build clean, 0 TS errors, all chunks emitted.
-The mutations-page now shows 4 mutation cards (was 6); users
-navigating to /crops/lotus, /crops/pumpkin, etc. will now
-land on the new unobtainable/special-seed pages instead of
-the 404 NotFoundPage.
+SEO + meta updates (auto-derived from data):
+- public/og-image.svg: second stats line updated to include
+  "5 sprinklers"
+- public/og-image.png: regenerated (115,597 bytes)
+- public/sitemap.xml: regenerated, 48 URLs total (was 46):
+  + /sprinklers, + /currencies
+- index.html og/twitter descriptions: "5 sprinklers" added
+
+Verification: build clean, 0 TS errors, 12 per-page chunks
+emitted. Live audit pending (will verify after deploy).

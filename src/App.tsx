@@ -34,6 +34,16 @@ const SeedPacksPage = lazy(() =>
     default: m.SeedPacksPage,
   }))
 );
+const SprinklersPage = lazy(() =>
+  import("@/pages/sprinklers-page").then((m) => ({
+    default: m.SprinklersPage,
+  }))
+);
+const CurrenciesPage = lazy(() =>
+  import("@/pages/currencies-page").then((m) => ({
+    default: m.CurrenciesPage,
+  }))
+);
 const MutationsPage = lazy(() =>
   import("@/pages/mutations-page").then((m) => ({
     default: m.MutationsPage,
@@ -72,6 +82,8 @@ const router = createBrowserRouter([
       { path: "gears", element: wrap(<GearsPage />) },
       { path: "eggs", element: wrap(<EggsPage />) },
       { path: "seed-packs", element: wrap(<SeedPacksPage />) },
+      { path: "sprinklers", element: wrap(<SprinklersPage />) },
+      { path: "currencies", element: wrap(<CurrenciesPage />) },
       { path: "mutations", element: wrap(<MutationsPage />) },
       { path: "calculator", element: wrap(<CalculatorPage />) },
       { path: "compare", element: wrap(<ComparePage />) },

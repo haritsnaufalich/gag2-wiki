@@ -1,5 +1,6 @@
-import { Settings2, Clock, Coins, Sprout, Users, Moon, Gift, ShieldCheck } from "lucide-react";
+import { Settings2, Clock, Coins, Sprout, Users, Moon, Gift, ShieldCheck, MapPin } from "lucide-react";
 import { SYSTEMS } from "@/data/systems";
+import { NPCS } from "@/data/npcs";
 import { Card, CardContent } from "@/components/ui/card";
 import type { ReactNode } from "react";
 
@@ -85,6 +86,33 @@ export function SystemsPage() {
                 TEAMGREENBEAN
               </code>
             </div>
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-sm font-semibold uppercase tracking-wider mb-3 inline-flex items-center gap-2 text-violet-400">
+            <Users className="h-3.5 w-3.5" /> NPCs
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {NPCS.map((n) => (
+              <Card key={n.slug} className="h-full hover:border-emerald-400/40 transition-all">
+                <CardContent className="p-5 space-y-2">
+                  <div className="flex items-start gap-3">
+                    <div className="grid h-10 w-10 place-items-center rounded-md bg-secondary text-xl shrink-0">
+                      <span aria-hidden>{n.emoji}</span>
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="font-semibold leading-tight">{n.name}</h3>
+                      <p className="text-xs text-emerald-400 font-medium">{n.role}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground pt-2 border-t border-border/40">
+                    <MapPin className="h-3 w-3" />
+                    {n.location}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </section>
 

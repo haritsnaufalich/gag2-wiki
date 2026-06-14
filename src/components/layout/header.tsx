@@ -30,11 +30,13 @@ const NAV: NavItem[] = [
   { to: "/crops", label: "Crops", Icon: Sprout },
   { to: "/pets", label: "Pets", Icon: PawPrint },
   { to: "/gears", label: "Gears", Icon: Wrench },
+  { to: "/sprinklers", label: "Sprinklers", Icon: Wrench },
   { to: "/eggs", label: "Eggs", Icon: Egg },
   { to: "/seed-packs", label: "Packs", Icon: Package },
   { to: "/mutations", label: "Mutations", Icon: Sparkles },
   { to: "/calculator", label: "Calculator", Icon: Calculator },
   { to: "/compare", label: "Compare", Icon: GitCompare },
+  { to: "/currencies", label: "Coins", Icon: Settings2 },
   { to: "/systems", label: "Systems", Icon: Settings2 },
 ];
 
