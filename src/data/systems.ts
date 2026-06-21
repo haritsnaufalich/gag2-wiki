@@ -11,16 +11,16 @@ export const SYSTEMS: GameSystem[] = [
   {
     slug: "day-length",
     title: "Day / Night Cycle",
-    emoji: "🌗",
+    emoji: "Dy",
     category: "time",
-    short: "7:30 day · 2:00 night",
+    short: "7:30 day / 2:00 night",
     detail:
       "In-game days run for 7m 30s, followed by a 2-minute night. A 30-second warning fires before the cycle flips.",
   },
   {
     slug: "offline-growth",
     title: "Offline Growth",
-    emoji: "⏳",
+    emoji: "Og",
     category: "growth",
     short: "Crops grow while you're away",
     detail:
@@ -29,16 +29,16 @@ export const SYSTEMS: GameSystem[] = [
   {
     slug: "fruit-decay",
     title: "Fruit Decay",
-    emoji: "🍂",
+    emoji: "Fd",
     category: "growth",
     short: "Don't let ripe fruit sit",
     detail:
-      "Mature fruit decays if left unharvested past a window — collect promptly to lock in full value.",
+      "Mature fruit decays if left unharvested past a window. Collect promptly to lock in full value.",
   },
   {
     slug: "plot-expansion",
     title: "Plot Expansion",
-    emoji: "🟩",
+    emoji: "Pe",
     category: "economy",
     short: "Buy more squares to scale up",
     detail:
@@ -47,7 +47,7 @@ export const SYSTEMS: GameSystem[] = [
   {
     slug: "night-stealing",
     title: "Night Stealing",
-    emoji: "🌙",
+    emoji: "Ns",
     category: "steal",
     short: "Steal at night, lose by day",
     detail:
@@ -56,79 +56,79 @@ export const SYSTEMS: GameSystem[] = [
   {
     slug: "active-code",
     title: "Active Code",
-    emoji: "🎟️",
+    emoji: "Cd",
     category: "economy",
-    short: "TEAMGREENBEAN → 3 Green Bean seeds",
+    short: "TEAMGREENBEAN -> 3 Green Bean seeds",
     detail:
-      "Redeem in-game for free seeds. Codes expire — check the wiki Updates page for new drops.",
+      "Redeem in-game for free seeds. Codes expire, so check the wiki Updates page for new drops.",
   },
   {
     slug: "weather-rain",
     title: "Rain",
-    emoji: "🌧️",
+    emoji: "Rn",
     category: "weather",
-    short: "5 min · 2× growth speed",
+    short: "5 min / 2x growth speed",
     detail:
       "Steady in-game rain lasts roughly 5 minutes and doubles the growth speed of every crop on the plot.",
   },
   {
     slug: "weather-lightning",
     title: "Lightning",
-    emoji: "⚡",
+    emoji: "Lt",
     category: "weather",
-    short: "5 min · Electric mutation",
+    short: "5 min / Electric mutation",
     detail:
-      "Crackling storm event lasting around 5 minutes — every harvest can roll the Electric mutation (80× on the canonical wiki).",
+      "Crackling storm event lasting around 5 minutes. Struck crops can roll the Electric mutation, listed around 25x on the wiki.",
   },
   {
     slug: "weather-rainbow",
     title: "Rainbow",
-    emoji: "🌈",
+    emoji: "Rw",
     category: "weather",
-    short: "5 min · boosted Rainbow chance",
+    short: "5 min / boosted Rainbow chance",
     detail:
       "Spectral weather that raises the chance of a Rainbow-mutated harvest for about 5 minutes.",
   },
   {
     slug: "weather-snowfall",
     title: "Snowfall / Blizzard",
-    emoji: "❄️",
+    emoji: "Sn",
     category: "weather",
-    short: "2:30 · Frozen mutation",
+    short: "2:30 / Frozen mutation",
     detail:
-      "Frost event that runs roughly 2 minutes 30 seconds. Every mature fruit can roll the Frozen mutation.",
+      "Frost event that runs roughly 2 minutes 30 seconds. Mature fruit can roll the Frozen mutation.",
   },
   {
     slug: "weather-starfall",
     title: "Starfall",
-    emoji: "🌠",
+    emoji: "Sf",
     category: "weather",
-    short: "2 min · Starstruck mutation",
+    short: "2 min / Starstruck mutation",
     detail:
-      "Rarest weather event. A 2-minute window where fruits can roll the cosmic Starstruck mutation.",
+      "Rare weather event with a 2-minute window where fruits can roll the Starstruck mutation.",
   },
   {
     slug: "weather-gold-seed",
     title: "Gold Seed (Midas)",
-    emoji: "🌟",
+    emoji: "Gs",
     category: "weather",
-    short: "2 min · Gold seeds drop",
+    short: "2 min / Gold seeds drop",
     detail:
       "Midas-touch event that lasts about 2 minutes. Gold Seeds spawn across the map while it runs.",
   },
   {
     slug: "weather-rainbow-seed",
     title: "Rainbow Seed",
-    emoji: "🎨",
+    emoji: "Rs",
     category: "weather",
-    short: "2 min · Rainbow seeds drop",
+    short: "2 min / Rainbow seeds drop",
     detail:
-      "Rainbow Seeds rain down for about 2 minutes — pair with Starfall for the rarest combo on the wiki.",
+      "Rainbow Seeds rain down for about 2 minutes. Pair with Starfall for one of the rarest combos on the wiki.",
   },
   {
     slug: "guilds",
     title: "Guilds",
-    emoji: "🛡️",
+    emoji: "Gu",
     category: "social",
     short: "99 Robux to create",
     detail:
@@ -137,20 +137,20 @@ export const SYSTEMS: GameSystem[] = [
   {
     slug: "core-loop",
     title: "Core Loop",
-    emoji: "🔁",
+    emoji: "Cl",
     category: "meta",
-    short: "Grow · Expand · Steal · Defend · Sell",
+    short: "Grow / Expand / Steal / Defend / Sell",
     detail:
-      "The endgame loop: grow crops, expand your plot, steal from neighbors, defend your own garden, then sell and reinvest. The cycle tightens as you climb the tiers.",
+      "The endgame loop: grow crops, expand your plot, steal from neighbors, defend your own garden, then sell and reinvest.",
   },
   {
     slug: "studio",
     title: "Studio & Release",
-    emoji: "🛠️",
+    emoji: "St",
     category: "meta",
-    short: "Splitting Point × Grow Games · June 12, 2026",
+    short: "Splitting Point x Grow Games / June 12, 2026",
     detail:
-      "Developed by Splitting Point Studios in partnership with Grow Games. Released June 12, 2026, with a new Super rarity tier and cross-platform support on PC, console, and mobile.",
+      "Developed by Splitting Point Studios in partnership with Grow Games. Released June 12, 2026, with a Super rarity tier and cross-platform support on PC, console, and mobile.",
   },
 ];
 

@@ -35,7 +35,7 @@ export const TIERS: Tier[] = [
   {
     id: "uncommon",
     label: "Uncommon",
-    description: "A small step up — slightly longer grow times and noticeably better rewards.",
+    description: "A small step up with longer grow times and better rewards.",
     dotClass: "bg-lime-500",
     accentClass: "from-lime-500/15 to-transparent",
     borderClass: "border-lime-500/30",
@@ -44,7 +44,7 @@ export const TIERS: Tier[] = [
   {
     id: "rare",
     label: "Rare",
-    description: "Mid-game staples. Worth planning your plots around for steady income.",
+    description: "Mid-game staples worth planning your plots around for steady income.",
     dotClass: "bg-sky-500",
     accentClass: "from-sky-500/15 to-transparent",
     borderClass: "border-sky-500/30",
@@ -53,7 +53,7 @@ export const TIERS: Tier[] = [
   {
     id: "epic",
     label: "Epic",
-    description: "Largest tier by count. The bread and butter of late-game farming strategies.",
+    description: "Strong late-game crops with higher prices and payout ceilings.",
     dotClass: "bg-violet-500",
     accentClass: "from-violet-500/15 to-transparent",
     borderClass: "border-violet-500/30",
@@ -62,7 +62,7 @@ export const TIERS: Tier[] = [
   {
     id: "legendary",
     label: "Legendary",
-    description: "Longer waits, premium payouts. The chase that defines top-tier plots.",
+    description: "Longer waits, premium payouts, and event-style chase items.",
     dotClass: "bg-amber-400",
     accentClass: "from-amber-400/15 to-transparent",
     borderClass: "border-amber-400/30",
@@ -71,7 +71,7 @@ export const TIERS: Tier[] = [
   {
     id: "mythic",
     label: "Mythic",
-    description: "Rare drops and event-bound harvests. Visually distinct, high-impact fruits.",
+    description: "Rare drops and event-bound harvests with high-impact value.",
     dotClass: "bg-rose-500",
     accentClass: "from-rose-500/15 to-transparent",
     borderClass: "border-rose-500/30",
@@ -80,7 +80,7 @@ export const TIERS: Tier[] = [
   {
     id: "super",
     label: "Super",
-    description: "Endgame. Two crops only, reserved for the most dedicated green thumbs.",
+    description: "Endgame crops reserved for the most dedicated green thumbs.",
     dotClass: "bg-gradient-to-r from-emerald-400 to-cyan-400",
     accentClass: "from-emerald-400/20 to-transparent",
     borderClass: "border-emerald-400/40",
@@ -89,7 +89,7 @@ export const TIERS: Tier[] = [
   {
     id: "unknown",
     label: "Unknown",
-    description: "Tier under community review — Thorn Rose, Glow Mushroom, Horned Melon.",
+    description: "Tier under community review for unreleased or incomplete wiki entries.",
     dotClass: "bg-zinc-600",
     accentClass: "from-zinc-600/15 to-transparent",
     borderClass: "border-zinc-600/30",

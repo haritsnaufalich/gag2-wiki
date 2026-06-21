@@ -28,7 +28,7 @@ export function CropDetailPage() {
     );
   }
 
-  const tier = TIER_MAP[crop.tier];
+  const tier = TIER_MAP[crop.tier] ?? TIER_MAP.unknown;
   const sameTier = CROPS.filter(
     (c) => c.tier === crop.tier && c.slug !== crop.slug
   ).slice(0, 4);

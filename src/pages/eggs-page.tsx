@@ -13,9 +13,9 @@ export function EggsPage() {
           <Egg className="h-7 w-7 text-emerald-400" /> Eggs
         </h1>
         <p className="mt-2 text-muted-foreground max-w-2xl">
-          {EGGS.length} egg types in Grow A Garden 2. Eggs are the route to
-          pets beyond map spawns. All three currently on the wiki are{" "}
-          <span className="text-foreground font-medium">TBA — not yet released</span>.
+          {EGGS.length} egg types in Grow A Garden 2. Eggs hatch pets from
+          guild rewards and other sources, with rarer eggs skewing toward
+          rarer pets.
         </p>
       </div>
 
@@ -42,11 +42,7 @@ export function EggsPage() {
                 <Row
                   icon={<Sparkles className="h-3 w-3" />}
                   label="Possible pets"
-                  value={
-                    egg.possiblePets.length > 0
-                      ? egg.possiblePets.join(", ")
-                      : "TBA"
-                  }
+                  value={egg.possiblePets.length > 0 ? egg.possiblePets.join(", ") : "TBA"}
                 />
                 <Row
                   icon={<MapPin className="h-3 w-3" />}
@@ -56,7 +52,7 @@ export function EggsPage() {
                 <Row
                   icon={<Tag className="h-3 w-3" />}
                   label="Source"
-                  value="growagarden2wiki.com · /eggs/"
+                  value="growagarden2wiki.com /eggs/"
                 />
               </div>
             </CardContent>

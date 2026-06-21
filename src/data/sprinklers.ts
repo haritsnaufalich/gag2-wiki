@@ -4,10 +4,8 @@ export interface Sprinkler {
   name: string;
   emoji: string;
   rarity: "common" | "uncommon" | "rare" | "legendary" | "super";
-  /** Price in Robux (always available for cash). */
-  priceRobux: number;
-  /** Alternative price in Sheckles (null when only Robux is offered). */
-  priceSheckles: number | null;
+  /** Price in Sheckles. */
+  priceSheckles: number;
   blurb: string;
 }
 
@@ -15,46 +13,41 @@ export const SPRINKLERS: Sprinkler[] = [
   {
     slug: "common-sprinkler",
     name: "Common Sprinkler",
-    emoji: "💧",
+    emoji: "Sp",
     rarity: "common",
-    priceRobux: 7,
     priceSheckles: 3000,
-    blurb: "Basic auto-waterer. Cheap and wide-coverage for starter plots.",
+    blurb: "Basic auto-waterer that periodically waters nearby crops.",
   },
   {
     slug: "uncommon-sprinkler",
     name: "Uncommon Sprinkler",
-    emoji: "💧",
+    emoji: "Sp",
     rarity: "uncommon",
-    priceRobux: 25,
     priceSheckles: 10000,
-    blurb: "Mid-tier auto-waterer. Larger range than the common variant.",
+    blurb: "Mid-tier auto-waterer with a moderate watering radius.",
   },
   {
     slug: "rare-sprinkler",
     name: "Rare Sprinkler",
-    emoji: "💧",
+    emoji: "Sp",
     rarity: "rare",
-    priceRobux: 49,
-    priceSheckles: 50000,
-    blurb: "Wide-range sprinkler. Worth the Sheckle premium for late-game plots.",
+    priceSheckles: 80000,
+    blurb: "Wide-radius sprinkler for larger crop layouts.",
   },
   {
     slug: "legendary-sprinkler",
     name: "Legendary Sprinkler",
-    emoji: "💧",
+    emoji: "Sp",
     rarity: "legendary",
-    priceRobux: 220,
-    priceSheckles: 100000,
-    blurb: "Endgame auto-waterer. Covers huge plots with one placement.",
+    priceSheckles: 1200000,
+    blurb: "Very large-radius sprinkler for late-game plots.",
   },
   {
     slug: "super-sprinkler",
     name: "Super Sprinkler",
-    emoji: "💧",
+    emoji: "Sp",
     rarity: "super",
-    priceRobux: 399,
-    priceSheckles: null,
-    blurb: "Apex sprinkler. The biggest range in the gear shop — Robux only.",
+    priceSheckles: 3000000,
+    blurb: "Top-tier sprinkler that waters the entire plot.",
   },
 ];

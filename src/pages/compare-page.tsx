@@ -8,19 +8,20 @@ import { cn, formatNumber, formatGrowTime } from "@/lib/utils";
 import { trackOnce } from "@/lib/use-plausible";
 import { JsonLd, SITE_NAME, SITE_URL, PUBLISHER, OG_IMAGE } from "@/components/seo/json-ld";
 
-const [aDefault, bDefault] = [CROPS[0], CROPS[15]];
+const availableCrops = CROPS.filter((c) => c.baseValue > 0);
+const aDefault = availableCrops[0] ?? CROPS[0];
+const bDefault =
+  availableCrops.find((c) => c.slug !== aDefault?.slug) ?? availableCrops[1] ?? CROPS[1] ?? aDefault;
 
 export function ComparePage() {
-  const [aSlug, setASlug] = useState(aDefault.slug);
-  const [bSlug, setBSlug] = useState(bDefault.slug);
+  const [aSlug, setASlug] = useState(aDefault?.slug ?? "");
+  const [bSlug, setBSlug] = useState(bDefault?.slug ?? "");
 
   const a = CROPS.find((c) => c.slug === aSlug) ?? aDefault;
   const b = CROPS.find((c) => c.slug === bSlug) ?? bDefault;
 
   const stats = useMemo(() => buildStats(a, b), [a, b]);
 
-  // Fire one event per distinct (a, b) pair — comparing the same two
-  // crops 5 times in a row only counts once.
   useEffect(() => {
     const pair = [a.slug, b.slug].sort().join("|");
     trackOnce("Compare crops", `cmp:${pair}`, { a: a.slug, b: b.slug });
@@ -41,88 +42,80 @@ export function ComparePage() {
           isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
         }}
       />
-    <div className="container py-10 max-w-5xl">
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight flex items-center gap-3">
-          <GitCompare className="h-7 w-7 text-emerald-400" /> Compare Crops
-        </h1>
-        <p className="mt-2 text-muted-foreground max-w-2xl">
-          Pick two crops. See base value, grow time, mutations-stacked ceiling,
-          and an apples-to-apples "sheckles per hour" projection.
-        </p>
-      </div>
+      <div className="container py-10 max-w-5xl">
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight flex items-center gap-3">
+            <GitCompare className="h-7 w-7 text-emerald-400" /> Compare Crops
+          </h1>
+          <p className="mt-2 text-muted-foreground max-w-2xl">
+            Pick two crops. See base value, grow time, mutations-stacked ceiling,
+            and an apples-to-apples Sheckles per hour projection.
+          </p>
+        </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Slot slot={a} onChange={setASlug} />
-        <Slot slot={b} onChange={setBSlug} />
-      </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Slot slot={a} onChange={setASlug} />
+          <Slot slot={b} onChange={setBSlug} />
+        </div>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-3">
-        <StatBlock
-          icon={<Coins className="h-4 w-4" />}
-          label="Base value"
-          a={`${formatNumber(a.baseValue)} ¢`}
-          b={`${formatNumber(b.baseValue)} ¢`}
-          winner={a.baseValue === b.baseValue ? 0 : a.baseValue > b.baseValue ? 1 : -1}
-        />
-        <StatBlock
-          icon={<Timer className="h-4 w-4" />}
-          label="Grow time"
-          a={a.growTimeSec != null && a.growTimeSec > 0 ? formatGrowTime(a.growTimeSec) : "TBD"}
-          b={b.growTimeSec != null && b.growTimeSec > 0 ? formatGrowTime(b.growTimeSec) : "TBD"}
-          winner={
-            a.growTimeSec != null && b.growTimeSec != null
-              ? a.growTimeSec === b.growTimeSec
-                ? 0
-                : a.growTimeSec < b.growTimeSec
-                  ? 1
-                  : -1
-              : 0
-          }
-          reverseWin
-        />
-        <StatBlock
-          icon={<TrendingUp className="h-4 w-4" />}
-          label="Sheckles / hour"
-          a={a.growTimeSec != null && a.growTimeSec > 0 ? `${formatNumber(stats.a.shecklesPerHour)} ¢` : "—"}
-          b={b.growTimeSec != null && b.growTimeSec > 0 ? `${formatNumber(stats.b.shecklesPerHour)} ¢` : "—"}
-          winner={
-            a.growTimeSec != null && b.growTimeSec != null
-              ? a.growTimeSec === b.growTimeSec
-                ? 0
-                : a.growTimeSec < b.growTimeSec
-                  ? 1
-                  : -1
-              : 0
-          }
-          reverseWin
-        />
-        <StatBlock
-          icon={<TrendingUp className="h-4 w-4" />}
-          label="Sheckles / hour"
-          a={a.growTimeSec != null && a.growTimeSec > 0 ? `${formatNumber(stats.a.shecklesPerHour)} ¢` : "—"}
-          b={b.growTimeSec != null && b.growTimeSec > 0 ? `${formatNumber(stats.b.shecklesPerHour)} ¢` : "—"}
-          winner={a.growTimeSec != null && b.growTimeSec != null ? a.growTimeSec === b.growTimeSec ? 0 : a.growTimeSec < b.growTimeSec ? 1 : -1 : 0}
-          reverseWin
-        />
-      </div>
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          <StatBlock
+            icon={<Coins className="h-4 w-4" />}
+            label="Base value"
+            a={`${formatNumber(a.baseValue)} Sheckles`}
+            b={`${formatNumber(b.baseValue)} Sheckles`}
+            winner={a.baseValue === b.baseValue ? 0 : a.baseValue > b.baseValue ? 1 : -1}
+          />
+          <StatBlock
+            icon={<Timer className="h-4 w-4" />}
+            label="Grow time"
+            a={a.growTimeSec != null && a.growTimeSec > 0 ? formatGrowTime(a.growTimeSec) : "TBD"}
+            b={b.growTimeSec != null && b.growTimeSec > 0 ? formatGrowTime(b.growTimeSec) : "TBD"}
+            winner={
+              a.growTimeSec != null && b.growTimeSec != null
+                ? a.growTimeSec === b.growTimeSec
+                  ? 0
+                  : a.growTimeSec < b.growTimeSec
+                    ? 1
+                    : -1
+                : 0
+            }
+            reverseWin
+          />
+          <StatBlock
+            icon={<TrendingUp className="h-4 w-4" />}
+            label="Sheckles / hour"
+            a={a.growTimeSec != null && a.growTimeSec > 0 ? `${formatNumber(stats.a.shecklesPerHour)} Sheckles` : "TBD"}
+            b={b.growTimeSec != null && b.growTimeSec > 0 ? `${formatNumber(stats.b.shecklesPerHour)} Sheckles` : "TBD"}
+            winner={
+              a.growTimeSec != null && b.growTimeSec != null
+                ? a.growTimeSec === b.growTimeSec
+                  ? 0
+                  : a.growTimeSec < b.growTimeSec
+                    ? 1
+                    : -1
+                : 0
+            }
+            reverseWin
+          />
+        </div>
 
-      <Card className="mt-6">
-        <CardContent className="p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <ArrowLeftRight className="h-4 w-4 text-emerald-400" />
-            <h2 className="font-semibold">Mutation ceiling</h2>
-            <span className="text-xs text-muted-foreground">
-              · all 5 mutations stacked
-            </span>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <MutationCeiling crop={a} accent="text-emerald-400" />
-            <MutationCeiling crop={b} accent="text-cyan-400" />
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+        <Card className="mt-6">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <ArrowLeftRight className="h-4 w-4 text-emerald-400" />
+              <h2 className="font-semibold">Mutation ceiling</h2>
+              <span className="text-xs text-muted-foreground">
+                all current mutations stacked
+              </span>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <MutationCeiling crop={a} accent="text-emerald-400" />
+              <MutationCeiling crop={b} accent="text-cyan-400" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 }
@@ -147,7 +140,7 @@ function Slot({
         >
           {CROPS.map((c) => (
             <option key={c.slug} value={c.slug}>
-              {c.emoji} {c.name} · {TIER_MAP[c.tier].label}
+              {c.emoji} {c.name} - {(TIER_MAP[c.tier] ?? TIER_MAP.unknown).label}
             </option>
           ))}
         </select>
@@ -218,9 +211,6 @@ function StatBlock({
 }
 
 function MutationCeiling({ crop, accent }: { crop: typeof aDefault; accent: string }) {
-  // Canonical formula: strongest variant × (1 + Σ weather mutations).
-  // Variants don't stack with each other; weather mutations stack
-  // additively into the "mutation stack".
   const variants = MUTATIONS.filter((m) => m.kind === "variant");
   const weathers = MUTATIONS.filter((m) => m.kind === "mutation");
   const variantMult = Math.max(
@@ -237,10 +227,10 @@ function MutationCeiling({ crop, accent }: { crop: typeof aDefault; accent: stri
     <div className="rounded-lg border border-border/60 bg-background/40 p-4">
       <div className="text-xs text-muted-foreground">{crop.name}</div>
       <div className={`text-2xl font-bold ${accent}`}>
-        {formatNumber(ceiling)} ¢
+        {formatNumber(ceiling)} Sheckles
       </div>
       <div className="text-[10px] text-muted-foreground mt-1">
-        base × {totalMultiplier.toLocaleString()} (variant × (1 + weather))
+        base x {totalMultiplier.toLocaleString()} (variant x (1 + weather))
       </div>
     </div>
   );

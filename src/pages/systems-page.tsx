@@ -10,9 +10,11 @@ const CATEGORY_META: Record<string, { label: string; icon: ReactNode; tint: stri
   social:  { label: "Guilds & Events",  icon: <Users className="h-3.5 w-3.5" />,      tint: "text-violet-400" },
   growth:  { label: "Growth & Decay",   icon: <Sprout className="h-3.5 w-3.5" />,     tint: "text-lime-400" },
   steal:   { label: "Stealing & Risk",  icon: <Moon className="h-3.5 w-3.5" />,       tint: "text-rose-400" },
+  weather: { label: "Weather",          icon: <Moon className="h-3.5 w-3.5" />,       tint: "text-cyan-400" },
+  meta:    { label: "Meta",             icon: <Settings2 className="h-3.5 w-3.5" />,  tint: "text-emerald-400" },
 };
 
-const CATEGORY_ORDER = ["time", "economy", "social", "growth", "steal"];
+const CATEGORY_ORDER = ["time", "economy", "social", "growth", "steal", "weather", "meta"];
 
 export function SystemsPage() {
   const grouped = CATEGORY_ORDER.map((cat) => ({

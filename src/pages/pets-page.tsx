@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { PawPrint, Coins, MapPin, Tag, Crown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { PETS, type Pet } from "@/data/pets";
+import { PETS, PET_OBTAINMENT_LABELS, type Pet } from "@/data/pets";
 import { formatNumber } from "@/lib/utils";
 import { trackOnce } from "@/lib/use-plausible";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -9,14 +9,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 type TierFilter = "all" | "super" | "mythic" | "legendary" | "rare" | "uncommon" | "common" | "unknown";
 
 const TIER_PRESETS: { id: TierFilter; label: string }[] = [
-  { id: "all",       label: "All" },
-  { id: "common",    label: "Common" },
-  { id: "uncommon",  label: "Uncommon" },
-  { id: "rare",      label: "Rare" },
+  { id: "all", label: "All" },
+  { id: "common", label: "Common" },
+  { id: "uncommon", label: "Uncommon" },
+  { id: "rare", label: "Rare" },
   { id: "legendary", label: "Legendary" },
-  { id: "mythic",    label: "Mythic" },
-  { id: "super",     label: "Super" },
-  { id: "unknown",   label: "Unknown" },
+  { id: "mythic", label: "Mythic" },
+  { id: "super", label: "Super" },
+  { id: "unknown", label: "Unknown" },
 ];
 
 export function PetsPage() {
@@ -39,9 +39,8 @@ export function PetsPage() {
           <PawPrint className="h-7 w-7 text-emerald-400" /> Pets
         </h1>
         <p className="mt-2 text-muted-foreground max-w-2xl">
-          {PETS.length} pets in the wiki, all from map spawns priced in
-          Sheckles. Three Supers — Raccoon, Ice Serpent, Black Dragon — top
-          the late-game ladder.
+          {PETS.length} pets in the wiki, covering map spawns, guild rewards,
+          and unreleased entries. Super pets top the late-game ladder.
         </p>
       </div>
 
@@ -73,7 +72,7 @@ export function PetsPage() {
 
       {filtered.length === 0 && (
         <div className="rounded-xl border border-dashed border-border bg-card/40 p-10 text-center">
-          <div className="text-3xl mb-2">🐾</div>
+          <div className="text-3xl mb-2">--</div>
           <h3 className="font-semibold">No pets match that filter</h3>
           <p className="text-sm text-muted-foreground mt-1">
             Try a different tier.
@@ -93,7 +92,6 @@ function PetCard({
   isOpen: boolean;
   onToggle: () => void;
 }) {
-  const isPending = pet.basePrice === null;
   return (
     <Card className="h-full transition-all hover:border-emerald-400/40">
       <button
@@ -127,12 +125,12 @@ function PetCard({
           <Stat
             icon={<Coins className="h-3 w-3" />}
             label="Price"
-            value={pet.basePrice !== null ? `${formatNumber(pet.basePrice)} ¢` : "TBD"}
+            value={pet.basePrice !== null ? `${formatNumber(pet.basePrice)} Sheckles` : "TBD"}
           />
           <Stat
             icon={<Crown className="h-3 w-3" />}
             label="Obtainment"
-            value={isPending ? "Pending" : "Map spawn"}
+            value={PET_OBTAINMENT_LABELS[pet.obtainment]}
           />
         </div>
       </button>
@@ -140,7 +138,7 @@ function PetCard({
       {isOpen && (
         <CardContent className="pt-0 pb-4 px-4">
           <div className="border-t border-border/40 pt-3 space-y-2 text-xs">
-            <Row icon={<MapPin className="h-3 w-3" />} label="Source" value="growagarden2wiki.com" />
+            <Row icon={<MapPin className="h-3 w-3" />} label="Source" value="growagarden2wiki.com /pets/" />
             <Row icon={<Tag className="h-3 w-3" />} label="Tags" value={pet.tags.map((t) => `#${t}`).join("  ")} />
           </div>
         </CardContent>

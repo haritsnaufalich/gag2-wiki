@@ -17,7 +17,7 @@ export const EGGS: Egg[] = [
   {
     slug: "common-egg",
     name: "Common Egg",
-    emoji: "🥚",
+    emoji: "Eg",
     rarity: "common",
     possiblePets: [
       "Frog",
@@ -29,29 +29,18 @@ export const EGGS: Egg[] = [
       "Golden Dragonfly",
       "Raccoon",
     ],
-    howToObtain: "TBA — not yet released",
+    howToObtain: "Guild weekly rewards",
     blurb:
-      "The everyday egg. Wide pet spread — common walkers up to high-tier helpers can hatch.",
+      "Weekly guild reward egg with normal, Big, and Mega chances across obtainable pets.",
   },
   {
     slug: "epic-egg",
     name: "Epic Egg",
-    emoji: "🥚",
+    emoji: "Ep",
     rarity: "epic",
     possiblePets: ["Deer", "Unicorn", "Bee", "Bee (Big)"],
-    howToObtain: "TBA — not yet released",
-    blurb:
-      "Mid-tier egg. Skews toward stronger pets with a couple of Big variants in the pool.",
-  },
-  {
-    slug: "common-pet-egg",
-    name: "Common Pet Egg",
-    emoji: "🥚",
-    rarity: "common",
-    possiblePets: [],
-    howToObtain: "TBA — not yet released",
-    blurb:
-      "A separate common-tier egg. Pet list not yet published on the wiki.",
+    howToObtain: "Unknown",
+    blurb: "Higher-rarity egg with Deer, Unicorn, Bee, and Bee (Big) listed on the wiki.",
   },
 ];
 

@@ -14,9 +14,8 @@ export function SeedPacksPage() {
           <Package className="h-7 w-7 text-emerald-400" /> Seed Packs
         </h1>
         <p className="mt-2 text-muted-foreground max-w-2xl">
-          {SEED_PACKS.length} paid seed bundles, priced in Robux. Each pack
-          rolls rarity odds; the Ghost Pepper Pack is the only one with
-          truly exclusive crops.
+          {SEED_PACKS.length} seed bundles from the current wiki. Ghost Pepper
+          Pack has confirmed per-crop odds; other pack odds are currently TBA.
         </p>
       </div>
 
@@ -27,8 +26,7 @@ export function SeedPacksPage() {
       </div>
 
       <p className="text-xs text-muted-foreground mt-6 italic">
-        Rarity odds are community estimates from the wiki. Actual percentages
-        may vary.
+        Odds are shown only where the wiki publishes confirmed percentages.
       </p>
     </div>
   );
@@ -45,7 +43,7 @@ function PackCard({ pack }: { pack: SeedPack }) {
           <div className="text-right">
             <div className="text-xs text-muted-foreground uppercase tracking-wider">Price</div>
             <div className="text-lg font-bold text-emerald-400">
-              {formatNumber(pack.price)} R$
+              {formatPrice(pack)}
             </div>
           </div>
         </div>
@@ -54,12 +52,34 @@ function PackCard({ pack }: { pack: SeedPack }) {
           <p className="text-sm text-muted-foreground mt-1">{pack.blurb}</p>
         </div>
 
-        <div>
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
-            Rarity distribution
+        {pack.odds ? (
+          <div>
+            <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+              Rarity distribution
+            </div>
+            <OddsBar odds={pack.odds} />
           </div>
-          <OddsBar odds={pack.odds} />
-        </div>
+        ) : (
+          <div className="rounded-md border border-dashed border-border/70 bg-background/30 p-3 text-xs text-muted-foreground">
+            Aggregate rarity odds: TBA on the wiki
+          </div>
+        )}
+
+        {pack.itemOdds && pack.itemOdds.length > 0 && (
+          <div>
+            <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+              Confirmed item odds
+            </div>
+            <div className="grid gap-1 text-xs">
+              {pack.itemOdds.map((odd) => (
+                <div key={odd.item} className="flex items-center justify-between rounded-md bg-secondary/50 px-2 py-1">
+                  <span>{odd.item}</span>
+                  <span className="font-semibold text-emerald-400">{odd.chancePct}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {pack.exclusiveCrops.length > 0 && (
           <div>
@@ -72,7 +92,7 @@ function PackCard({ pack }: { pack: SeedPack }) {
                   key={c}
                   className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium"
                 >
-                  🌶️ {c}
+                  {c}
                 </span>
               ))}
             </div>
@@ -88,7 +108,7 @@ function PackCard({ pack }: { pack: SeedPack }) {
           <Row
             icon={<Tag className="h-3 w-3" />}
             label="Source"
-            value="growagarden2wiki.com · /seed-packs/"
+            value="growagarden2wiki.com /seed-packs/"
           />
         </div>
       </CardContent>
@@ -96,16 +116,24 @@ function PackCard({ pack }: { pack: SeedPack }) {
   );
 }
 
-const RARITY_META: { key: keyof SeedPack["odds"]; label: string; color: string }[] = [
+function formatPrice(pack: SeedPack): string {
+  if (pack.bundlePrices && pack.bundlePrices.length > 0) {
+    return pack.bundlePrices.map((price) => `${formatNumber(price)} R$`).join(" / ");
+  }
+  return pack.price === null ? "TBA" : `${formatNumber(pack.price)} R$`;
+}
+
+const RARITY_META: { key: keyof NonNullable<SeedPack["odds"]>; label: string; color: string }[] = [
   { key: "common",    label: "Common",    color: "bg-zinc-400" },
   { key: "uncommon",  label: "Uncommon",  color: "bg-lime-500" },
+  { key: "rare",      label: "Rare",      color: "bg-sky-500" },
   { key: "epic",      label: "Epic",      color: "bg-violet-500" },
   { key: "legendary", label: "Legendary", color: "bg-amber-400" },
   { key: "mythic",    label: "Mythic",    color: "bg-rose-500" },
   { key: "super",     label: "Super",     color: "bg-emerald-400" },
 ];
 
-function OddsBar({ odds }: { odds: SeedPack["odds"] }) {
+function OddsBar({ odds }: { odds: NonNullable<SeedPack["odds"]> }) {
   return (
     <div className="space-y-1">
       <div className="flex h-2 rounded-full overflow-hidden bg-secondary">

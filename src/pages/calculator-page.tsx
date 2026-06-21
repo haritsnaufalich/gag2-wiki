@@ -11,8 +11,10 @@ import { TierBadge } from "@/components/crops/tier-badge";
 import { trackOnce } from "@/lib/use-plausible";
 import { JsonLd, SITE_NAME, SITE_URL, PUBLISHER, OG_IMAGE } from "@/components/seo/json-ld";
 
+const defaultCrop = CROPS.find((c) => c.valueCurve || c.valuePerGram || c.weightAvgG || c.baseValue > 0) ?? CROPS[0];
+
 export function CalculatorPage() {
-  const [cropSlug, setCropSlug] = useState(CROPS[12].slug);
+  const [cropSlug, setCropSlug] = useState(defaultCrop?.slug ?? "");
   const [quantity, setQuantity] = useState(1);
   const [weightG, setWeightG] = useState<number>(1);
   const [friendCount, setFriendCount] = useState<number>(0);
@@ -21,7 +23,8 @@ export function CalculatorPage() {
   const friendBoostPct = friendCount * 10;
   const [active, setActive] = useState<Set<string>>(new Set());
 
-  const crop = CROPS.find((c) => c.slug === cropSlug) ?? CROPS[0];
+  const crop = CROPS.find((c) => c.slug === cropSlug) ?? defaultCrop;
+  const cropTier = TIER_MAP[crop.tier] ?? TIER_MAP.unknown;
 
   const { effective, multiplier, activatedMutations } = useMemo(() => {
     const activated = MUTATIONS.filter((m) => active.has(m.slug));
@@ -227,7 +230,7 @@ export function CalculatorPage() {
             </div>
 
             <div className="pt-3 border-t border-border/40 space-y-1.5 text-xs">
-              <Row label="Tier" value={TIER_MAP[crop.tier].label} />
+              <Row label="Tier" value={cropTier.label} />
               <Row label="Grow time" value={crop.growTimeSec && crop.growTimeSec != null && crop.growTimeSec > 0 ? `${crop.growTimeSec}s` : "TBD"} />
               <Row
                 label="Multi-harvest"
@@ -384,7 +387,7 @@ export function CalculatorPage() {
 
           <div className="text-xs text-muted-foreground flex items-center gap-2">
             <TierBadge tier={crop.tier} size="sm" />
-            <span>Stats shown are community estimates for the {TIER_MAP[crop.tier].label} tier.</span>
+            <span>Stats shown are community estimates for the {cropTier.label} tier.</span>
           </div>
         </div>
       </div>

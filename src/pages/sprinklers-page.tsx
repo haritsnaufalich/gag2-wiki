@@ -13,8 +13,8 @@ export function SprinklersPage() {
         </h1>
         <p className="mt-2 text-muted-foreground max-w-2xl">
           Auto-watering gears that passively water crops within their range.
-          Higher-rarity sprinklers cover more ground. All are sold at the
-          Gear Shop — Sheckles for most, Robux for the Super.
+          Higher-rarity sprinklers cover more ground. Current wiki data lists
+          all sprinklers as Gear Shop Sheckle purchases.
         </p>
       </div>
 
@@ -38,13 +38,8 @@ export function SprinklersPage() {
                 <div className="flex items-center gap-1.5 text-foreground">
                   <Coins className="h-3 w-3 text-amber-400" />
                   <span className="font-medium">
-                    {s.priceRobux.toLocaleString()} R$
+                    {s.priceSheckles.toLocaleString()} Sheckles
                   </span>
-                  {s.priceSheckles !== null && (
-                    <span className="text-muted-foreground">
-                      · or {s.priceSheckles.toLocaleString()} ¢
-                    </span>
-                  )}
                 </div>
                 <div className="flex items-center gap-1.5 text-muted-foreground">
                   <Sprout className="h-3 w-3 text-emerald-400" />

@@ -15,34 +15,61 @@ type QuickLink = {
   accent: "emerald" | "amber" | "violet" | "rose";
 };
 
-const QUICK_LINKS: QuickLink[] = [
-  { to: "/crops",      title: "Crops",      desc: "Browse the 36-crop catalog with values, weights and stock chances.", Icon: Sprout,    accent: "emerald" },
-  { to: "/calculator", title: "Calculator", desc: "Estimate Sheckle yield from mutations, friend boost and weight.",   Icon: Calculator, accent: "amber"   },
-  { to: "/mutations",  title: "Mutations",  desc: "Stack Gold × Rainbow + Frozen + Electric for 3,440× combos.",       Icon: Sparkles,  accent: "violet"  },
-  { to: "/pets",       title: "Pets",       desc: "12 tameable companions with rarity, cost and spawn locations.",     Icon: PawPrint,  accent: "rose"    },
-];
-
 const ACCENT_RING: Record<QuickLink["accent"], string> = {
   emerald: "group-hover:border-emerald-400/60 group-focus-visible:border-emerald-400",
-  amber:   "group-hover:border-amber-400/60   group-focus-visible:border-amber-400",
-  violet:  "group-hover:border-violet-400/60  group-focus-visible:border-violet-400",
-  rose:    "group-hover:border-rose-400/60    group-focus-visible:border-rose-400",
+  amber: "group-hover:border-amber-400/60 group-focus-visible:border-amber-400",
+  violet: "group-hover:border-violet-400/60 group-focus-visible:border-violet-400",
+  rose: "group-hover:border-rose-400/60 group-focus-visible:border-rose-400",
 };
+
 const ACCENT_ICON: Record<QuickLink["accent"], string> = {
   emerald: "text-emerald-400",
-  amber:   "text-amber-400",
-  violet:  "text-violet-400",
-  rose:    "text-rose-400",
+  amber: "text-amber-400",
+  violet: "text-violet-400",
+  rose: "text-rose-400",
 };
 
 export function HomePage() {
   const { theme } = useTheme();
   const dark = theme !== "garden";
 
+  const quickLinks: QuickLink[] = [
+    {
+      to: "/crops",
+      title: "Crops",
+      desc: `Browse the ${WIKI_STATS.totalCrops}-crop catalog with values, weights and stock chances.`,
+      Icon: Sprout,
+      accent: "emerald",
+    },
+    {
+      to: "/calculator",
+      title: "Calculator",
+      desc: "Estimate Sheckle yield from mutations, friend boost and weight.",
+      Icon: Calculator,
+      accent: "amber",
+    },
+    {
+      to: "/mutations",
+      title: "Mutations",
+      desc: `Compare ${WIKI_STATS.totalMutations} variants and weather/event mutations.`,
+      Icon: Sparkles,
+      accent: "violet",
+    },
+    {
+      to: "/pets",
+      title: "Pets",
+      desc: `${WIKI_STATS.totalPets} companions with rarity, cost and obtainment sources.`,
+      Icon: PawPrint,
+      accent: "rose",
+    },
+  ];
+
   const featuredCrops = TIERS
     .slice()
     .sort((a, b) => a.order - b.order)
-    .flatMap((tier) => CROPS.filter((c) => c.tier === tier.id && c.obtainment !== "unknown" && c.obtainment !== "event"))
+    .flatMap((tier) =>
+      CROPS.filter((c) => c.tier === tier.id && c.obtainment !== "unknown" && c.obtainment !== "event")
+    )
     .slice(0, 4);
 
   return (
@@ -58,7 +85,7 @@ export function HomePage() {
         <div className="container max-w-4xl py-24 md:py-32 text-center">
           <p className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/40 px-3 py-1 text-xs font-medium text-muted-foreground">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" aria-hidden />
-            Live · {WIKI_STATS.totalCrops} crops · {WIKI_STATS.totalMutations} mutations · {WIKI_STATS.totalTiers} tiers
+            Live - {WIKI_STATS.totalCrops} crops - {WIKI_STATS.totalMutations} mutations - {WIKI_STATS.totalTiers} tiers
           </p>
           <h1 className="mt-6 text-4xl md:text-6xl font-bold tracking-tight leading-[1.05]">
             The companion wiki for
@@ -68,7 +95,7 @@ export function HomePage() {
             </span>
           </h1>
           <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Crops, mutations, pets, calculators and systems — sourced from the
+            Crops, mutations, pets, calculators and systems sourced from the
             canonical wiki, condensed for fast lookup. No login, no ads, no
             third-party trackers beyond anonymous page-view stats.
           </p>
@@ -94,7 +121,7 @@ export function HomePage() {
           Quick links
         </h2>
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {QUICK_LINKS.map((q) => (
+          {quickLinks.map((q) => (
             <li key={q.to}>
               <Link
                 to={q.to}
@@ -121,7 +148,7 @@ export function HomePage() {
             to="/crops"
             className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 rounded-sm"
           >
-            View all 36 →
+            View all {WIKI_STATS.totalCrops} <ArrowRight className="inline h-3 w-3" aria-hidden />
           </Link>
         </div>
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -154,11 +181,11 @@ export function HomePage() {
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold text-base">Active in-game code</h3>
               <p className="text-sm text-muted-foreground mt-1">
-                Redeem in Grow A Garden 2 for free seeds. Codes expire — check back often.
+                Redeem in Grow A Garden 2 for free seeds. Codes expire, so check back often.
               </p>
             </div>
             <code className="self-start sm:self-center inline-block rounded-md bg-secondary px-4 py-2 text-base font-mono font-semibold text-emerald-400 tracking-wider">
-              TEAMGREENBEAN
+              {WIKI_STATS.activeCode}
             </code>
           </CardContent>
         </Card>

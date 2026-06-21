@@ -7,16 +7,25 @@ export * from "./gears";
 export * from "./eggs";
 export * from "./seed-packs";
 
+import { CROPS } from "./crops";
+import { EGGS } from "./eggs";
+import { GEARS } from "./gears";
+import { MUTATIONS } from "./mutations";
+import { PETS } from "./pets";
+import { SEED_PACKS } from "./seed-packs";
+import { SYSTEMS } from "./systems";
+import { TIERS } from "./tiers";
+
 export const WIKI_STATS = {
-  totalCrops: 36,
-  totalTiers: 8,
-  totalMutations: 4,
-  totalPets: 12,
-  totalGears: 27,
-  totalEggs: 3,
-  totalSeedPacks: 4,
-  totalSystems: 16,
+  totalCrops: CROPS.length,
+  totalTiers: TIERS.length,
+  totalMutations: MUTATIONS.length,
+  totalPets: PETS.length,
+  totalGears: GEARS.length,
+  totalEggs: EGGS.length,
+  totalSeedPacks: SEED_PACKS.length,
+  totalSystems: SYSTEMS.length,
   activeCode: "TEAMGREENBEAN",
-  lastUpdated: "2026-06-13",
-  version: "1.6.0",
+  lastUpdated: "2026-06-21",
+  version: "1.7.0",
 };

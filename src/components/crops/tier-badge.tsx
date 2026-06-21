@@ -9,7 +9,7 @@ interface TierBadgeProps {
 }
 
 export function TierBadge({ tier, size = "sm", className }: TierBadgeProps) {
-  const t = TIER_MAP[tier];
+  const t = TIER_MAP[tier] ?? TIER_MAP.unknown;
   return (
     <span
       className={cn(
@@ -26,11 +26,12 @@ export function TierBadge({ tier, size = "sm", className }: TierBadgeProps) {
 }
 
 export function TierDot({ tier, className }: { tier: TierId; className?: string }) {
+  const t = TIER_MAP[tier] ?? TIER_MAP.unknown;
   return (
     <span
       className={cn(
         "inline-block h-2 w-2 rounded-full",
-        TIER_MAP[tier].dotClass,
+        t.dotClass,
         className
       )}
     />
