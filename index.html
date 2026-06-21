@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="GAG2 Wiki" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <title>Grow A Garden 2 Wiki</title>
+    <meta
+      name="description"
+      content="Grow A Garden 2 Wiki — community-driven crop database, mutations, calculators, and tools. Dark, emerald-accented fan companion."
+    />
+    <meta name="author" content="haritsnaufalich" />
+    <link rel="canonical" href="https://haritsnaufalich.github.io/gag2-wiki/" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" sizes="180x180" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Grow A Garden 2 Wiki" />
+    <meta property="og:title" content="Grow A Garden 2 Wiki" />
+    <meta
+      property="og:description"
+      content="36 crops · 4 mutations · 27 gears · 5 sprinklers · 3 eggs · 4 packs · 8 tiers · calculators · compare · systems. Dark, emerald-accented fan companion."
+    />
+    <meta property="og:url" content="https://haritsnaufalich.github.io/gag2-wiki/" />
+    <meta property="og:image" content="https://haritsnaufalich.github.io/gag2-wiki/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Grow A Garden 2 Wiki — dark emerald theme with a grid of crop emojis" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Grow A Garden 2 Wiki" />
+    <meta
+      name="twitter:description"
+      content="36 crops · 4 mutations · 27 gears · 5 sprinklers · 3 eggs · 4 packs · 8 tiers · calculators · compare · systems. Dark, emerald-accented fan companion."
+    />
+    <meta name="twitter:image" content="https://haritsnaufalich.github.io/gag2-wiki/og-image.png" />
+    <meta name="twitter:image:alt" content="Grow A Garden 2 Wiki — dark emerald theme with a grid of crop emojis" />
+
+    <!-- Plausible analytics (privacy-friendly, no cookies, GDPR-compliant).
+         Self-host: replace src with /js/script.js and the dashboard's URL. -->
+    <script defer data-domain="haritsnaufalich.github.io" src="https://plausible.io/js/script.js"></script>
+
+    <!-- Structured data: site-wide WebSite schema.
+         Per-page schemas (Article, WebPage) are rendered by the page
+         components via <JsonLd /> from src/components/seo/json-ld.tsx. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Grow A Garden 2 Wiki",
+        "url": "https://haritsnaufalich.github.io/gag2-wiki",
+        "description": "Community-driven crop database, mutations, calculators, and tools for Grow A Garden 2 on Roblox.",
+        "inLanguage": "en",
+        "publisher": {
+          "@type": "Person",
+          "name": "haritsnaufalich",
+          "url": "https://github.com/haritsnaufalich"
+        }
+      }
+    </script>
+    <script type="module" crossorigin src="./assets/main-Dy0stYPv.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/main-BBEr_7N6.css">
+  </head>
+  <body class="antialiased">
+    <div id="root"></div>
+    <!--
+      One-time migration from hash router (#/crops) to browser router
+      (/crops). Runs before the React bundle so createBrowserRouter sees
+      the corrected path on init. Safe to remove after a few months.
+    -->
+    <script>
+      (function () {
+        var h = window.location.hash;
+        if (h && h.charAt(0) === "#" && h.charAt(1) === "/") {
+          var newPath = h.slice(1) + window.location.search;
+          window.history.replaceState(
+            null,
+            "",
+            window.location.pathname + newPath
+          );
+        }
+      })();
+    </script>
+  </body>
+</html>

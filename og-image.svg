@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0a0a"/>
+      <stop offset="100%" stop-color="#0f1814"/>
+    </linearGradient>
+    <linearGradient id="brand" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#3ecf8e"/>
+      <stop offset="100%" stop-color="#22b37a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.2" cy="0.1" r="0.6">
+      <stop offset="0%" stop-color="#3ecf8e" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#3ecf8e" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0.85" cy="0.95" r="0.5">
+      <stop offset="0%" stop-color="#22b37a" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#22b37a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect width="1200" height="630" fill="url(#glow2)"/>
+
+  <!-- Top eyebrow -->
+  <g transform="translate(80,80)">
+    <rect x="0" y="0" width="14" height="14" rx="3" fill="url(#brand)"/>
+    <text x="26" y="12" font-family="ui-sans-serif, system-ui, -apple-system, Poppins, Segoe UI, sans-serif" font-size="16" font-weight="600" fill="#3ecf8e" letter-spacing="2">GROW A GARDEN 2 · WIKI</text>
+  </g>
+
+  <!-- Title -->
+  <g transform="translate(80,200)">
+    <text x="0" y="0" font-family="ui-sans-serif, system-ui, -apple-system, Poppins, Segoe UI, sans-serif" font-size="84" font-weight="800" fill="#fafafa">The companion</text>
+    <text x="0" y="100" font-family="ui-sans-serif, system-ui, -apple-system, Poppins, Segoe UI, sans-serif" font-size="84" font-weight="800" fill="#fafafa">wiki for the</text>
+    <text x="0" y="200" font-family="ui-sans-serif, system-ui, -apple-system, Poppins, Segoe UI, sans-serif" font-size="84" font-weight="800" fill="url(#brand)">green-thumbed.</text>
+  </g>
+
+  <!-- Subtitle / stats -->
+  <g transform="translate(80,520)" font-family="ui-sans-serif, system-ui, -apple-system, Poppins, Segoe UI, sans-serif" fill="#a1a1aa">
+    <text x="0" y="0" font-size="22" font-weight="500">36 crops · 4 mutations · 8 tiers · calculators · compare · systems</text>
+    <text x="0" y="32" font-size="18" font-weight="500">+ 27 gears · 5 sprinklers · 3 eggs · 4 seed packs · 12 pets</text>
+    <text x="0" y="64" font-size="18" font-weight="400" fill="#71717a">Dark + emerald · Tailwind + shadcn · Fan-made companion</text>
+  </g>
+
+  <!-- Crop mosaic (right side) -->
+  <g transform="translate(720,140)">
+    <!-- 6x3 grid of tile cards -->
+    <g font-family="ui-sans-serif, system-ui, sans-serif" font-size="42" text-anchor="middle">
+      <!-- row 1 -->
+      <g transform="translate(0,0)">
+        <rect width="120" height="120" rx="18" fill="#171717" stroke="#262626"/>
+        <text x="60" y="78">🥕</text>
+      </g>
+      <g transform="translate(135,0)">
+        <rect width="120" height="120" rx="18" fill="#171717" stroke="#262626"/>
+        <text x="60" y="78">🍓</text>
+      </g>
+      <g transform="translate(270,0)">
+        <rect width="120" height="120" rx="18" fill="#171717" stroke="#262626"/>
+        <text x="60" y="78">🫐</text>
+      </g>
+      <!-- row 2 -->
+      <g transform="translate(0,135)">
+        <rect width="120" height="120" rx="18" fill="#171717" stroke="#262626"/>
+        <text x="60" y="78">🌽</text>
+      </g>
+      <g transform="translate(135,135)">
+        <rect width="120" height="120" rx="18" fill="#1a1a1a" stroke="#3ecf8e" stroke-opacity="0.5" stroke-width="2"/>
+        <text x="60" y="78">🍒</text>
+      </g>
+      <g transform="translate(270,135)">
+        <rect width="120" height="120" rx="18" fill="#171717" stroke="#262626"/>
+        <text x="60" y="78">🥭</text>
+      </g>
+      <!-- row 3 -->
+      <g transform="translate(0,270)">
+        <rect width="120" height="120" rx="18" fill="#171717" stroke="#262626"/>
+        <text x="60" y="78">🌻</text>
+      </g>
+      <g transform="translate(135,270)">
+        <rect width="120" height="120" rx="18" fill="#171717" stroke="#262626"/>
+        <text x="60" y="78">🌸</text>
+      </g>
+      <g transform="translate(270,270)">
+        <rect width="120" height="120" rx="18" fill="url(#brand)"/>
+        <text x="60" y="78">🔥</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- URL footer -->
+  <g transform="translate(80,600)" font-family="ui-monospace, ui-sans-serif, monospace" font-size="16" fill="#52525b">
+    <text x="0" y="0">haritsnaufalich.github.io/gag2-wiki/</text>
+  </g>
+</svg>

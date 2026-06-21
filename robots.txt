@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://haritsnaufalich.github.io/gag2-wiki/sitemap.xml
